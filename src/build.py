@@ -93,7 +93,7 @@ FOTOS = {
     "hero": ("micro-escaner-3d", (0, 560, 1932, 2009), "Odontóloga de Dental Ciudad mostrando un escaneo 3D en la computadora, con una paciente en el sillón"),
     "micro-recepcion": ("micro-recepcion-arbol", (760, 560, 1932, 1440), SEDES["microcentro"]["foto_alt"]),
     "micro-sala": ("micro-sala-espera", (0, 700, 1932, 2149), "Sala de espera de la sede Microcentro"),
-    "once-box": ("once-box-trabajo", (0, 150, 2576, 2082), SEDES["once"]["foto_alt"]),
+    "once-box": ("once-box-trabajo", (320, 60, 2576, 1752), SEDES["once"]["foto_alt"]),
     "once-rx": ("once-rx-poster", (0, 120, 960, 840), "Radiovisiógrafo de la sede Once"),
     "micro-tec": ("micro-tecnologia", (0, 150, 960, 870), "Radiovisiógrafo y escáner 3D de la sede Microcentro"),
     "rx-imax": ("once-rx-imax", (0, 500, 1932, 1949), "Equipo de rayos digital con la radiografía en la computadora"),
@@ -292,7 +292,9 @@ def brand_source(name):
     if not LOGO_VARIANTE:
         return orig
     os.makedirs(CACHE, exist_ok=True)
-    dst = os.path.join(CACHE, f"{LOGO_VARIANTE}-{HUE_AGUA}-{name}")
+    with open(orig, "rb") as fh:
+        key = hashlib.md5(fh.read()).hexdigest()[:8]
+    dst = os.path.join(CACHE, f"{LOGO_VARIANTE}-{HUE_AGUA}-{key}-{name}")
     if not os.path.exists(dst):
         agua(Image.open(orig)).save(dst, optimize=True)
     return dst
@@ -331,7 +333,8 @@ def copy_brand():
                   {"src": "/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]}, ensure_ascii=False))
     # Logo de la cabecera: WebP a 3x del PNG (el SVG trazado pesa 58 KB y tarda en dibujarse)
     os.makedirs(CACHE, exist_ok=True)
-    tag = f"{LOGO_VARIANTE or 'original'}-{HUE_AGUA if LOGO_VARIANTE else ''}"
+    with open(brand_source("logo-horizontal.png"), "rb") as fh:
+        tag = f"{LOGO_VARIANTE or 'original'}-{hashlib.md5(fh.read()).hexdigest()[:8]}"
     logo = os.path.join(CACHE, f"logo-{tag}-720.webp")
     if not os.path.exists(logo):
         im = Image.open(brand_source("logo-horizontal.png")).convert("RGBA")
@@ -700,7 +703,7 @@ def build():
         hero(f, "Tu dentista en Microcentro y Once",
              "Implantes, prótesis, carillas, ortodoncia, conductos y odontopediatría. Dos sedes en el centro de Buenos Aires, con turnos de lunes a sábado.",
              "hero")
-        + tratamientos_grid() + como(f) + equipo() + tecnologia(f) + sedes_block(f) + form() + faq_block()))
+        + sedes_block(f) + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + form() + faq_block()))
     urls.append("/")
 
     for slug, s in SEDES.items():
@@ -723,7 +726,7 @@ def build():
             f"Dental Ciudad sede {s['nombre']}: {s['calle']}, {s['ref']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos. Atención particular.",
             hero(f, f"Dentista en {s['nombre']}", f"{cap(s['ref'])}. {s['acceso']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos, con turnos de lunes a sábado.",
                  s["foto"], cta_sede=slug)
-            + body + tratamientos_grid() + como(f) + equipo() + form(sede=slug) + faq_block(), sede=slug))
+            + body + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + form(sede=slug) + faq_block(), sede=slug))
         urls.append(f"/{slug}/")
 
     for t in TRATAMIENTOS:

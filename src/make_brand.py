@@ -65,6 +65,21 @@ def key_white(img_rgb, tol=14):
     return rgba
 
 
+def key_enclosed_white(rgba, tol=14):
+    """Para el logotipo (letras sin blanco adentro): el blanco encerrado dentro de las letras (la D, la e, la a, la d)
+    también pasa a transparente, con el mismo suavizado del borde. (Eduardo, 25/10: quedaban rellenos blancos.)"""
+    out = rgba.copy()
+    whiteness = out[..., :3].min(axis=2).astype(np.int32)
+    soft = np.clip((255 - whiteness) * 255 // max(1, tol * 2), 0, 255).astype(np.uint8)
+    alpha = np.minimum(out[..., 3], soft)
+    a = alpha.astype(np.float32)[..., None] / 255.0
+    rgb = out[..., :3].astype(np.float32)
+    rgb = np.where(a > 0, np.clip((rgb - 255 * (1 - a)) / np.maximum(a, 1e-3), 0, 255), rgb)
+    out[..., :3] = rgb.astype(np.uint8)
+    out[..., 3] = alpha
+    return out
+
+
 def crop_alpha(rgba, pad_ratio=0.06):
     ys, xs = np.where(rgba[..., 3] > 8)
     y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
@@ -145,10 +160,38 @@ def main(iso_path, vert_path, word_path):
     except Exception:
         font = ImageFont.load_default()
     iso = key_white(np.array(Image.open(iso_path).convert("RGB")))
-    vert = key_white(np.array(Image.open(vert_path).convert("RGB")))
-    word = key_white(np.array(Image.open(word_path).convert("RGB")))
-    iso, vert, word = crop_alpha(iso, 0.04), crop_alpha(vert, 0.05), crop_alpha(word, 0.08)
-    ISO, VERT, WORD = to_pil(iso), to_pil(vert), to_pil(word)
+    word = key_enclosed_white(key_white(np.array(Image.open(word_path).convert("RGB"))))
+    iso, word = crop_alpha(iso, 0.04), crop_alpha(word, 0.08)
+    ISO, WORD_JPG = to_pil(iso), to_pil(word)
+
+    # Logotipo limpio: cada letra (componente conexo) entera va al color de marca que domina adentro, a 4x, y se baja
+    # con LANCZOS. Así ni los bordes del JPG (halo oscuro) ni el blanco de adentro de las letras llegan a los PNG.
+    big = np.array(WORD_JPG.resize((WORD_JPG.width * 4, WORD_JPG.height * 4), Image.LANCZOS))
+    wa = big[..., 3] > 128
+    wrgb = big[..., :3].astype(np.int32)
+    sat_green = wrgb[..., 1] - np.maximum(wrgb[..., 0], wrgb[..., 2])
+    n, labels = cv2.connectedComponents(wa.astype(np.uint8), connectivity=8)
+    wgreen = np.zeros_like(wa)
+    for k in range(1, n):
+        comp = labels == k
+        if (sat_green[comp] > 20).mean() > 0.5:
+            wgreen |= comp
+    wblack = wa & ~wgreen
+    clean = np.zeros(big.shape, np.uint8)
+    carbon = tuple(int(CARBON[i:i + 2], 16) for i in (1, 3, 5))
+    verde = tuple(int(VERDE_LOGO[i:i + 2], 16) for i in (1, 3, 5))
+    clean[wblack, :3] = carbon
+    clean[wgreen, :3] = verde
+    clean[wa, 3] = 255
+    WORD = Image.fromarray(clean, "RGBA").resize((WORD_JPG.width, WORD_JPG.height), Image.LANCZOS)
+    word = np.array(WORD)
+    # logo vertical: se arma con el isotipo y el logotipo ya limpios (el JPG original también traía las letras rellenas)
+    iso_v = fit(ISO, 760, 760)
+    word_v = fit(WORD, 820, 200)
+    VERT = canvas(904, iso_v.height + 40 + word_v.height + 80, (0, 0, 0, 0))
+    VERT.alpha_composite(iso_v, ((VERT.width - iso_v.width) // 2, 40))
+    VERT.alpha_composite(word_v, ((VERT.width - word_v.width) // 2, 40 + iso_v.height + 40))
+    vert = np.array(VERT)
 
     # ---- PNG transparentes
     for size in (2048, 1024, 512):
@@ -175,21 +218,7 @@ def main(iso_path, vert_path, word_path):
     to_pil(arr).save(ensure("png", "logo-horizontal-blanco.png"), optimize=True)
 
     # ---- SVG (vectorizados)
-    # logotipo: negro y verde por separado
-    # se traza a 4x para que las curvas salgan fieles (la fuente mide solo ~200 px de alto)
-    big = np.array(WORD.resize((WORD.width * 4, WORD.height * 4), Image.LANCZOS))
-    wa = big[..., 3] > 128
-    wrgb = big[..., :3].astype(np.int32)
-    # cada píxel va al color de marca más cercano (así los bordes del JPG no quedan como contorno oscuro)
-    # cada letra (componente conexo) entera va al color que domina adentro: así los bordes del JPG no dejan contorno
-    sat_green = wrgb[..., 1] - np.maximum(wrgb[..., 0], wrgb[..., 2])
-    n, labels = cv2.connectedComponents(wa.astype(np.uint8), connectivity=8)
-    wgreen = np.zeros_like(wa)
-    for k in range(1, n):
-        comp = labels == k
-        if (sat_green[comp] > 20).mean() > 0.5:
-            wgreen |= comp
-    wblack = wa & ~wgreen
+    # logotipo: negro y verde por separado, trazados de las mismas máscaras a 4x
     scale = 0.25
     body_word = (f'<path fill="{CARBON}" d="{trace_mask(wblack, scale)}"/>'
                  f'<path fill="{VERDE_LOGO}" d="{trace_mask(wgreen, scale)}"/>')

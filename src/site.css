@@ -156,7 +156,7 @@ ul{margin:0;padding:0;list-style:none}
 
 /* sedes */
 .sedes{display:grid;gap:24px}
-.sede{background:var(--panel);border:1px solid rgba(127,157,160,.35);border-radius:var(--r);overflow:hidden;display:grid;box-shadow:0 10px 30px rgba(4,106,120,.08)}
+.sede{background:var(--panel);border:1px solid rgba(127,157,160,.35);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 30px rgba(4,106,120,.08)}
 .sede-photo{display:block;line-height:0}
 .sede-photo img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--wash)}
 .sede-body{padding:22px 22px 24px;display:grid;gap:12px;align-content:start}
