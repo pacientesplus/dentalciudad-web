@@ -74,7 +74,7 @@ para los extranjeros que ya llegan (las reseñas en Google lo muestran); despué
    lo dice el WhatsApp (bot o recepción) en la primera respuesta. Decide Eduardo.
 2. Profesionales: nombre, matrícula, área, si tienen especialidad registrada, foto. Responsable/director para el pie.
 3. Una sola web (dentalciudad.ar) con /microcentro/ y /once/; dentalmicrocentro.ar redirige. Fecha del cambio.
-4. Nombre de las fichas de Google: pasar a «Dental Ciudad» en las dos.
+4. Nombre de las fichas de Google: **decidido (Eduardo, 25/10 18:03): «Dental Ciudad Microcentro» y «Dental Ciudad Once»** (lo mismo que la web pone en los datos estructurados). Lo cambia Eduardo en «Editar perfil»; Google puede tardar unos días en mostrarlo y a veces pide volver a verificar.
 5. Horarios (confirmar los de la ficha), teléfono fijo si hay, ascensor en Micro (piso 3), acceso en Once, niños sí/no,
    urgencias sábados, formas de pago (tarjeta, cuotas: solo por WhatsApp).
 6. Fotos reales (sedes, equipo) y logo. Nada de antes/después por ahora.
