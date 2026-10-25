@@ -20,7 +20,7 @@ SRC = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.dirname(SRC)
 OUT = os.path.join(PROJ, "public")
 MARCA = os.path.join(PROJ, "marca")
-LOGO_VARIANTE = "verde-agua"   # "verde-agua" (pedido de Eduardo 25/10) o "" para el verde lima original
+LOGO_VARIANTE = ""   # "" = logo original verde lima (elegido por Eduardo 25/10); "verde-agua" = la variante corrida al verde agua
 SITE = "https://dentalciudad.ar"
 BRAND = "Dental Ciudad"
 TODAY = date.today().isoformat()
@@ -185,7 +185,7 @@ def copy_brand():
     for name in ("favicon.ico", "favicon.svg", "favicon-96.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "icon-512-maskable.png", "og.jpg"):
         shutil.copy(os.path.join(web, name), os.path.join(OUT, name))
     write("site.webmanifest", json.dumps({
-        "name": BRAND, "short_name": BRAND, "start_url": "/", "display": "browser", "background_color": "#FFFFFF", "theme_color": "#0E7F70",
+        "name": BRAND, "short_name": BRAND, "start_url": "/", "display": "browser", "background_color": "#FFFFFF", "theme_color": "#2E7D1F",
         "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
                   {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
                   {"src": "/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]}, ensure_ascii=False))
@@ -244,7 +244,7 @@ def head(title, desc, path, assets, noindex=False):
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="es_AR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0E7F70">
+<meta name="theme-color" content="#2E7D1F">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

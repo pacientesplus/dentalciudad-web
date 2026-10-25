@@ -1,6 +1,6 @@
 # dentalciudad.ar
 
-Marca: `marca/` (kit generado con `src/make_brand.py`; la web usa la variante `verde-agua`, se cambia con `LOGO_VARIANTE` en `src/build.py`). Análisis de estándares y decisiones: `PLAN.md`.
+Marca: `marca/` (kit generado con `src/make_brand.py`; la web usa el logo original; la variante `verde-agua` queda en el kit y se cambia con `LOGO_VARIANTE` en `src/build.py`). Análisis de estándares y decisiones: `PLAN.md`.
 Lighthouse móvil del 25/10: rendimiento 99, accesibilidad 100, buenas prácticas 100, SEO 100.
 
 Web de Dental Ciudad: una sola web, una página por sede (`/microcentro/`, `/once/`) y una por tratamiento

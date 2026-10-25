@@ -1,16 +1,16 @@
-/* Dental Ciudad. Tema claro, verde agua (pedido de Eduardo 25/10): el formulario arriba, lo demás abajo, poco oscuro.
+/* Dental Ciudad. Tema claro con los verdes del logo (Eduardo eligió el logo original, 25/10): el formulario arriba, lo demás abajo, poco oscuro.
    Letra del sistema (carga instantánea). */
 :root{
   --paper:#FFFFFF;
-  --ink:#163A35;        /* texto: verde muy oscuro, no negro */
-  --muted:#4B6964;
-  --line:#CFE6E1;
-  --wash:#F3FAF8;
-  --tint:#E3F5F1;
-  --brand:#0E7F70;      /* botones y enlaces: 4,9:1 sobre blanco */
-  --brand-dark:#0B6E62; /* texto verde sobre fondos claros (pastillas): 6,1:1 */
+  --ink:#1B2E17;        /* texto: verde muy oscuro, no negro */
+  --muted:#52664B;
+  --line:#D6E8CC;
+  --wash:#F5FAF1;
+  --tint:#EEF7E6;
+  --brand:#2E7D1F;      /* botones y enlaces: el verde del logo, oscuro (5,2:1 sobre blanco) */
+  --brand-dark:#245F18; /* texto verde sobre fondos claros (pastillas) */
   --brand-ink:#FFFFFF;
-  --accent:#1AC49A;     /* el verde agua del logo, solo detalles */
+  --accent:#7DC41A;     /* el verde lima del logo, solo detalles */
   --alert:#B42318;
   --radius:12px;
   --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -88,7 +88,7 @@ legend{font-weight:600;margin-bottom:8px;padding:0}
 
 .foot{padding-block:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;display:grid;gap:6px}
 .linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--brand);text-decoration:underline;cursor:pointer}
-.sticky{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom,0px));box-shadow:0 6px 20px rgba(14,127,112,.28);z-index:20}
+.sticky{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom,0px));box-shadow:0 6px 20px rgba(46,125,31,.28);z-index:20}
 
 .consent{position:fixed;left:12px;right:12px;bottom:80px;z-index:30;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:0 8px 30px rgba(0,0,0,.12);display:grid;gap:10px;max-width:560px;margin-inline:auto}
 .consent-actions{display:flex;gap:8px;justify-content:flex-end}
