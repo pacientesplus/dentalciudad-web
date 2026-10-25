@@ -533,7 +533,7 @@ def form(motivo=None, sede=None):
     sede_items = [(k, f"{v['nombre']}, {v['ref']}") for k, v in SEDES.items()]
     def paso(n, name, legend, cls, items, checked, err):
         return (f'<fieldset class="paso" aria-describedby="err-{name}"><legend><span class="paso-n glass" aria-hidden="true"><b>{n}</b></span>'
-                f'<span class="paso-t">{legend}</span><span class="paso-hint">Elegí una opción</span></legend><div class="opts {cls}">{chips(name, items, checked)}</div>'
+                f'<span class="paso-t"><small>Paso {n} de 3</small>{legend}</span><span class="paso-hint">Elegí una opción</span></legend><div class="opts {cls}">{chips(name, items, checked)}</div>'
                 f'<p class="error" id="err-{name}" hidden>{err}</p></fieldset>')
     return f"""<section class="section section-wash section-form" id="turno" aria-labelledby="h-form">
 <div class="wrap">
@@ -545,7 +545,7 @@ def form(motivo=None, sede=None):
 {paso(2, "pago", "¿Cómo pensás pagar?", "opts-2", PAGOS, None, "Elegí cómo pensás pagar.")}
 <div class="note" id="obra-note" hidden role="status">Por ahora atendemos de manera particular. Si querés venir igual, podés pagar en efectivo, por transferencia o con tarjeta.</div>
 {paso(3, "sede", "¿Qué sede te queda mejor?", "opts-2", sede_items, sede, "Elegí una sede.")}
-<div class="form-send"><button class="btn glass lit btn-big" type="submit">{ICO_WA}<span>Enviar por WhatsApp</span></button>
+<div class="form-send"><p class="listo-hint">Listo. Ahora sí, tocá enviar.</p><button class="btn glass lit btn-big" type="submit">{ICO_WA}<span>Enviar por WhatsApp</span></button>
 <p class="hint">{esc(PRECIO_TXT)} No pedimos ni guardamos datos. <a href="/privacidad/">Privacidad</a></p></div>
 </form>
 <div class="done" id="done" hidden role="status">

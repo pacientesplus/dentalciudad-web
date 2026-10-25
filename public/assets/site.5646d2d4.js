@@ -139,19 +139,22 @@
     apagarMano();
     const fs = activo();
     pasosAll().forEach((p) => p.classList.toggle("activo", p === fs));
-    if (!fs || !panel || !visible || pausa || reducir) return;
-    const opts = Array.from(fs.querySelectorAll(".opt span")).slice(0, 4);
+    const envio = form.querySelector(".form-send");
+    if (envio) envio.classList.toggle("listo", !fs);
+    if (!panel || !visible || pausa || reducir) return;
+    const opts = fs ? Array.from(fs.querySelectorAll(".opt span")).slice(0, 4) : [form.querySelector('button[type="submit"]')];
     let i = 0;
     const paso = () => {
       const o = opts[i % opts.length];
       const pr = panel.getBoundingClientRect(), r = o.getBoundingClientRect();
-      mano.style.transform = "translate(" + (r.left - pr.left + r.width * 0.8 - 21) + "px," + (r.top - pr.top + r.height * 0.5 - 9) + "px)";
+      const fx = fs ? 0.8 : 0.72;
+      mano.style.transform = "translate(" + (r.left - pr.left + r.width * fx - 21) + "px," + (r.top - pr.top + r.height * 0.55 - 9) + "px)";
       mano.classList.add("on");
       manoT = setTimeout(() => {
         mano.classList.add("tap"); o.classList.add("pista");
         manoT = setTimeout(() => {
           mano.classList.remove("tap"); o.classList.remove("pista"); i++;
-          manoT = setTimeout(paso, i % opts.length === 0 ? 1400 : 450);
+          manoT = setTimeout(paso, fs ? (i % opts.length === 0 ? 1400 : 450) : 900);
         }, 380);
       }, 850);
     };

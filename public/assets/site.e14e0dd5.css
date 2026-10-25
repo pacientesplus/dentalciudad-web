@@ -290,3 +290,27 @@ legend{flex-wrap:wrap}
 .mano.tap svg{transform:scale(.82)}
 .opt span.pista{box-shadow:inset 0 1px 0 #fff,inset 0 0 0 3px rgba(255,255,255,.72),inset 0 -14px 20px rgba(169,253,252,.75),0 10px 22px rgba(10,154,163,.25)}
 @media (prefers-reduced-motion:reduce){.mano{display:none}.paso-hint::before{animation:none}}
+
+/* pasos bien separados y títulos grandes (Eduardo, 25/10: «me pierdo, no se diferencian») */
+.form{gap:0}
+.paso{padding:22px 0 24px;border-top:1px solid var(--line)}
+.paso:first-of-type{border-top:0;padding-top:4px}
+.paso legend{gap:12px;margin-bottom:14px}
+.paso-n{width:42px;height:42px;font-size:1.2rem}
+.paso-t{display:grid;font-size:1.28rem;font-weight:700;line-height:1.2;letter-spacing:-.015em}
+.paso-t small{font-size:.8rem;font-weight:650;color:var(--muted);letter-spacing:0;margin-bottom:2px}
+.paso-hint{margin-left:54px}
+.paso.activo{position:relative}
+.paso.activo::before{content:"";position:absolute;left:-16px;top:18px;bottom:20px;width:3px;border-radius:2px;background:linear-gradient(var(--teal),var(--glow))}
+.paso:first-of-type.activo::before{top:0}
+#obra-note{margin-bottom:18px}
+.form-send{border-top:1px solid var(--line);padding-top:22px;margin-top:0}
+.listo-hint{display:none;font-weight:700;font-size:1.1rem;color:var(--brand)}
+.form-send.listo .listo-hint{display:block}
+.form-send.listo .btn{animation:pulso 1.8s ease-in-out infinite}
+@keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@media (min-width:600px){.paso.activo::before{left:-28px}}
+@media (prefers-reduced-motion:reduce){.form-send.listo .btn{animation:none}}
+/* la leyenda como bloque normal (si no, el navegador la pega al borde del fieldset) */
+.paso legend{float:left;width:100%}
+.paso .opts,.paso .error{clear:both}
