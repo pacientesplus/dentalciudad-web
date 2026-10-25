@@ -26,7 +26,9 @@ OUT = os.path.join(PROJ, "public")
 MARCA = os.path.join(PROJ, "marca")
 FOTOS_DIR = os.path.join(PROJ, "fotos")
 CACHE = os.path.join(PROJ, ".cache", "img")
-LOGO_VARIANTE = ""   # "" = logo original verde lima (elegido por Eduardo 25/10); "verde-agua" = la variante corrida al verde agua
+LOGO_VARIANTE = "verde-agua"   # "" = logo original verde lima; "verde-agua" = el verde corrido al verde agua de la referencia
+                               # «Vidrio con luz interior» (Eduardo, 25/10 14:35: «con ese estilo y colores»)
+HUE_AGUA = 183                 # tono del verde agua de la referencia (el lima del logo está en ~85°)
 SITE = "https://dentalciudad.ar"
 BRAND = "Dental Ciudad"
 TODAY = date.today().isoformat()
@@ -250,28 +252,96 @@ def hashed(src_path, published_name, sub=""):
     return "/" + rel
 
 
+def agua(im):
+    """Corre el verde lima del logo al verde agua de la referencia (solo los píxeles verdes; gris y negro quedan)."""
+    import colorsys
+    import numpy as np
+    rgba = np.array(im.convert("RGBA")).astype(np.float32)
+    r, g, b, a = rgba[..., 0] / 255, rgba[..., 1] / 255, rgba[..., 2] / 255, rgba[..., 3]
+    mx, mn = np.maximum(np.maximum(r, g), b), np.minimum(np.minimum(r, g), b)
+    d = mx - mn
+    sat = np.where(mx > 0, d / np.maximum(mx, 1e-6), 0)
+    # tono en grados
+    h = np.zeros_like(mx)
+    m = d > 1e-6
+    rc, gc, bc = (mx - r) / np.maximum(d, 1e-6), (mx - g) / np.maximum(d, 1e-6), (mx - b) / np.maximum(d, 1e-6)
+    h = np.where(m & (mx == r), (bc - gc), h)
+    h = np.where(m & (mx == g), 2.0 + rc - bc, h)
+    h = np.where(m & (mx == b), 4.0 + gc - rc, h)
+    h = (h / 6.0) % 1.0 * 360
+    greenish = (a > 0) & (sat > 0.25) & (h > 55) & (h < 125)
+    h2 = np.where(greenish, (h - 85 + HUE_AGUA) % 360, h)
+    # de vuelta a RGB
+    hh = h2 / 60.0
+    i = np.floor(hh) % 6
+    f = hh - np.floor(hh)
+    p_ = mx * (1 - sat); q = mx * (1 - sat * f); t = mx * (1 - sat * (1 - f))
+    r2 = np.select([i == 0, i == 1, i == 2, i == 3, i == 4, i == 5], [mx, q, p_, p_, t, mx])
+    g2 = np.select([i == 0, i == 1, i == 2, i == 3, i == 4, i == 5], [t, mx, mx, q, p_, p_])
+    b2 = np.select([i == 0, i == 1, i == 2, i == 3, i == 4, i == 5], [p_, p_, t, mx, mx, q])
+    out = rgba.copy()
+    out[..., 0] = np.where(greenish, r2 * 255, rgba[..., 0])
+    out[..., 1] = np.where(greenish, g2 * 255, rgba[..., 1])
+    out[..., 2] = np.where(greenish, b2 * 255, rgba[..., 2])
+    return Image.fromarray(out.clip(0, 255).astype("uint8"), "RGBA")
+
+
+def brand_source(name):
+    """PNG del logo pedido, en la variante elegida (generada en caché a partir del original)."""
+    orig = os.path.join(MARCA, "png", name)
+    if not LOGO_VARIANTE:
+        return orig
+    os.makedirs(CACHE, exist_ok=True)
+    dst = os.path.join(CACHE, f"{LOGO_VARIANTE}-{HUE_AGUA}-{name}")
+    if not os.path.exists(dst):
+        agua(Image.open(orig)).save(dst, optimize=True)
+    return dst
+
+
 def copy_brand():
     web = os.path.join(MARCA, "web")
-    for name in ("favicon.ico", "favicon.svg", "favicon-96.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "icon-512-maskable.png", "og.jpg"):
-        shutil.copy(os.path.join(web, name), os.path.join(OUT, name))
+    if not LOGO_VARIANTE:
+        for name in ("favicon.ico", "favicon-96.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "icon-512-maskable.png", "og.jpg"):
+            shutil.copy(os.path.join(web, name), os.path.join(OUT, name))
+    else:
+        iso = Image.open(brand_source("isotipo-1024.png")).convert("RGBA")
+        from PIL import ImageDraw
+
+        def square(size, pad, bg=None):
+            c = Image.new("RGBA", (size, size), bg or (0, 0, 0, 0))
+            inner = int(size * (1 - 2 * pad))
+            i = iso.copy(); i.thumbnail((inner, inner), Image.LANCZOS)
+            c.alpha_composite(i, ((size - i.width) // 2, (size - i.height) // 2))
+            return c
+        square(256, 0.04).save(os.path.join(OUT, "favicon.ico"), sizes=[(16, 16), (32, 32), (48, 48)])
+        square(96, 0.04).save(os.path.join(OUT, "favicon-96.png"), optimize=True)
+        square(180, 0.12, (255, 255, 255, 255)).convert("RGB").save(os.path.join(OUT, "apple-touch-icon.png"), optimize=True)
+        square(192, 0.08).save(os.path.join(OUT, "icon-192.png"), optimize=True)
+        square(512, 0.08).save(os.path.join(OUT, "icon-512.png"), optimize=True)
+        square(512, 0.2, (255, 255, 255, 255)).save(os.path.join(OUT, "icon-512-maskable.png"), optimize=True)
+        og = Image.new("RGBA", (1200, 630), (244, 250, 252, 255))
+        h = Image.open(brand_source("logo-horizontal.png")).convert("RGBA"); h.thumbnail((900, 300), Image.LANCZOS)
+        og.alpha_composite(h, ((1200 - h.width) // 2, (630 - h.height) // 2 - 20))
+        ImageDraw.Draw(og).rectangle([0, 600, 1200, 630], fill="#0A9AA3")
+        og.convert("RGB").save(os.path.join(OUT, "og.jpg"), quality=90, optimize=True)
     write("site.webmanifest", json.dumps({
-        "name": BRAND, "short_name": BRAND, "start_url": "/", "display": "browser", "background_color": "#FFFFFF", "theme_color": "#2E7D1F",
+        "name": BRAND, "short_name": BRAND, "start_url": "/", "display": "browser", "background_color": "#F4FAFC", "theme_color": "#0A9AA3",
         "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
                   {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
                   {"src": "/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]}, ensure_ascii=False))
-    # Logo de la cabecera: WebP a 3x del PNG original (el SVG trazado pesa 58 KB y tarda en dibujarse)
+    # Logo de la cabecera: WebP a 3x del PNG (el SVG trazado pesa 58 KB y tarda en dibujarse)
     os.makedirs(CACHE, exist_ok=True)
-    logo_dir = os.path.join(MARCA, LOGO_VARIANTE) if LOGO_VARIANTE else os.path.join(MARCA, "png")
-    logo = os.path.join(CACHE, f"logo-{LOGO_VARIANTE or 'original'}-720.webp")
+    tag = f"{LOGO_VARIANTE or 'original'}-{HUE_AGUA if LOGO_VARIANTE else ''}"
+    logo = os.path.join(CACHE, f"logo-{tag}-720.webp")
     if not os.path.exists(logo):
-        im = Image.open(os.path.join(logo_dir, "logo-horizontal.png")).convert("RGBA")
+        im = Image.open(brand_source("logo-horizontal.png")).convert("RGBA")
         im.thumbnail((720, 720), Image.LANCZOS)
         im.save(logo, "WEBP", quality=90, method=6)
     out = {"logo": hashed(logo, "logo-horizontal.webp")}
-    # logo blanco para el pie (PNG chico, generado del original)
-    blanco = os.path.join(CACHE, "logo-blanco-520.webp")
+    # logo blanco para el pie
+    blanco = os.path.join(CACHE, f"logo-blanco-{tag}-520.webp")
     if not os.path.exists(blanco):
-        im = Image.open(os.path.join(MARCA, "png", "logo-horizontal-blanco.png")).convert("RGBA")
+        im = Image.open(brand_source("logo-horizontal-blanco.png")).convert("RGBA")
         im.thumbnail((520, 520), Image.LANCZOS)
         im.save(blanco, "WEBP", quality=90, method=6)
     out["logo_blanco"] = hashed(blanco, "logo-blanco.webp")
@@ -381,7 +451,7 @@ def head(title, desc, path, assets, noindex=False, preload=None):
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="es_AR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#F4FAFC">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -402,7 +472,7 @@ def topbar(assets):
 <nav class="topnav" aria-label="Secciones">
 <a href="/#tratamientos">Tratamientos</a><a href="/#sedes">Sedes</a><a href="/microcentro/">Microcentro</a><a href="/once/">Once</a><a href="/#preguntas">Preguntas</a>
 </nav>
-<a class="btn btn-top" href="#turno">Pedir turno</a>
+<a class="btn glass lit btn-top" href="#turno">Pedir turno</a>
 <details class="menu"><summary aria-label="Menú"><span></span><span></span><span></span></summary>
 <nav aria-label="Secciones"><a href="/#tratamientos">Tratamientos</a><a href="/#sedes">Sedes</a><a href="/microcentro/">Sede Microcentro</a><a href="/once/">Sede Once</a><a href="/#preguntas">Preguntas</a><a href="#turno">Pedir turno</a></nav></details>
 </div>
@@ -423,10 +493,10 @@ def hero(f, h1, lead, foto, eager=True, cta_sede=None, chips_html=""):
     """Portada: texto a la izquierda, foto grande a la derecha."""
     if cta_sede:
         s = SEDES[cta_sede]
-        ctas = (f'<a class="btn" href="https://wa.me/{s["wa"]}" target="_blank" rel="noopener">{ICO_WA}Escribir por WhatsApp</a>'
-                f'<a class="btn btn-line" href="tel:{s["tel"]}" data-llamar="{cta_sede}">{ICO_TEL}Llamar {esc(s["tel_label"])}</a>')
+        ctas = (f'<a class="btn glass lit" href="https://wa.me/{s["wa"]}" target="_blank" rel="noopener">{ICO_WA}<span>Escribir por WhatsApp</span></a>'
+                f'<a class="btn glass" href="tel:{s["tel"]}" data-llamar="{cta_sede}">{ICO_TEL}<span>Llamar {esc(s["tel_label"])}</span></a>')
     else:
-        ctas = f'<a class="btn" href="#turno">{ICO_WA}Pedir turno por WhatsApp</a><a class="btn btn-line" href="#sedes">Ver las sedes</a>'
+        ctas = f'<a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a><a class="btn glass" href="#sedes"><span>Ver las sedes</span></a>'
     return f"""<section class="hero">
 <div class="wrap hero-grid">
 <div class="hero-text">
@@ -446,7 +516,7 @@ def chips(name, items, checked=None):
     for it in items:
         key, label = it[0], it[1]
         chk = " checked" if checked == key else ""
-        out.append(f'<label class="opt"><input type="radio" name="{name}" value="{esc(key)}"{chk}><span>{esc(label)}</span></label>')
+        out.append(f'<label class="opt"><input type="radio" name="{name}" value="{esc(key)}"{chk}><span class="glass"><b>{esc(label)}</b></span></label>')
     return "".join(out)
 
 
@@ -464,14 +534,14 @@ def form(motivo=None, sede=None):
 <fieldset aria-describedby="err-cuando"><legend>¿Cuándo querés venir?</legend><div class="opts opts-3">{chips("cuando", CUANDO)}</div><p class="error" id="err-cuando" hidden>Elegí cuándo querés venir.</p></fieldset>
 <fieldset aria-describedby="err-sede"><legend>¿Qué sede te queda mejor?</legend><div class="opts opts-2">{chips("sede", sede_items, sede)}</div><p class="error" id="err-sede" hidden>Elegí una sede.</p></fieldset>
 <p class="price">{esc(PRECIO_TXT)}</p>
-<div class="form-send"><button class="btn btn-big" type="submit">{ICO_WA}Enviar por WhatsApp</button>
+<div class="form-send"><button class="btn glass lit btn-big" type="submit">{ICO_WA}<span>Enviar por WhatsApp</span></button>
 <p class="hint">Se abre WhatsApp con tu mensaje escrito. No pedimos ni guardamos datos. <a href="/privacidad/">Privacidad</a></p></div>
 </form>
 <div class="done" id="done" hidden role="status">
 <p class="done-title">Tu mensaje está listo</p>
 <p>Si WhatsApp no se abrió, tocá el botón.</p>
 <p class="code">Código de tu consulta: <strong id="done-code"></strong></p>
-<a class="btn" id="done-open" href="#" rel="noopener">{ICO_WA}Abrir WhatsApp</a>
+<a class="btn glass lit" id="done-open" href="#" rel="noopener">{ICO_WA}<span>Abrir WhatsApp</span></a>
 </div>
 </div>
 </div>
@@ -517,6 +587,7 @@ def tecnologia(f):
 <ul class="tec">
 <li>{picture(f, "rx-imax", "(min-width: 760px) 50vw, 100vw")}<h3>Radiografías digitales en el sillón</h3><p>El radiovisiógrafo toma la placa y la muestra en la pantalla al instante, con menos radiación que la radiografía de antes. Se usa en conductos, implantes y para ver qué tan profunda está una caries.</p></li>
 <li>{picture(f, "micro-tec", "(min-width: 760px) 50vw, 100vw")}<h3>Escáner 3D en vez de la pasta de impresión</h3><p>Una cámara chica recorre los dientes y arma el modelo en la computadora. Sirve para prótesis, carillas y alineadores, sin la cubeta con pasta que daba arcadas.</p></li>
+<li>{picture(f, "rx-portatil", "(min-width: 760px) 50vw, 100vw")}<h3>Rayos X portátil</h3><p>El equipo va hasta el sillón: la placa se toma sin que te levantes ni cambies de sala, y aparece en la pantalla del consultorio.</p></li>
 </ul>
 </div></section>"""
 
@@ -535,8 +606,8 @@ def sede_card(f, slug, s):
 {horario_html(s)}
 <p class="rating rating-small">{ICO_STAR}<span><strong>{s['rating'][0]}</strong> en Google, {s['rating'][1]} reseñas</span></p>
 <div class="sede-ctas">
-<a class="btn" href="https://wa.me/{s['wa']}" target="_blank" rel="noopener">{ICO_WA}WhatsApp {esc(s['tel_label'])}</a>
-<a class="btn btn-line" href="tel:{s['tel']}" data-llamar="{slug}">{ICO_TEL}Llamar</a>
+<a class="btn glass lit" href="https://wa.me/{s['wa']}" target="_blank" rel="noopener">{ICO_WA}<span>WhatsApp {esc(s['tel_label'])}</span></a>
+<a class="btn glass" href="tel:{s['tel']}" data-llamar="{slug}">{ICO_TEL}<span>Llamar</span></a>
 <a class="textlink" href="{esc(s['maps'])}" target="_blank" rel="noopener">Cómo llegar</a>
 </div>
 </div>
@@ -573,7 +644,7 @@ def foot(assets, landing_sede=None):
 </div>
 <div class="wrap foot-legal"><a href="/privacidad/">Privacidad</a><button type="button" class="linkbtn" data-cookie-settings>Cookies</button><span>Actualizado el {date.today().strftime('%d/%m/%Y')}</span></div>
 </footer>
-<div class="sticky" id="sticky"><a class="btn" href="#turno">{ICO_WA}Pedir turno</a></div>
+<div class="sticky" id="sticky"><a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno</span></a></div>
 {page_data(landing_sede)}
 <script src="{assets['js']}" defer></script>
 </body></html>
@@ -614,6 +685,7 @@ def build():
     urls.append("/")
 
     for slug, s in SEDES.items():
+        otra = "once" if slug == "microcentro" else "microcentro"
         hs = horario_html(s)
         body = f"""<section class="section" aria-labelledby="h-llegar"><div class="wrap split split-rev">
 <div class="split-text">
@@ -623,6 +695,7 @@ def build():
 <p>{esc(s['transporte'])}</p>
 <h3 class="h-small">Horario</h3>{hs}
 <p class="links"><a class="textlink" href="{esc(s['maps'])}" target="_blank" rel="noopener">Abrir en Google Maps</a></p>
+<p class="otra">¿Te queda mejor la otra sede? <a href="/{otra}/">Ver la sede {esc(SEDES[otra]['nombre'])}</a>.</p>
 </div>
 {picture(f, "micro-sala" if slug == "microcentro" else "once-rx", "(min-width: 900px) 40vw, 100vw", "split-photo")}
 </div></section>"""
@@ -638,7 +711,7 @@ def build():
         paras = "".join(f"<p>{esc(p)}</p>" for p in t["body"][:-1])
         body = f"""<section class="section"><div class="wrap"><div class="prose"><h2>En qué consiste</h2>{paras}
 <div class="consulta"><h3>{esc(t.get("panel", "En la primera consulta"))}</h3><p>{esc(t["body"][-1])}</p>
-<a class="btn" href="#turno">{ICO_WA}Pedir turno por WhatsApp</a></div></div></div></section>"""
+<a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a></div></div></div></section>"""
         write(f"{t['slug']}/index.html", shell(
             f"/{t['slug']}/", f"{t['title']} | {BRAND}", t["desc"],
             hero(f, t["h1"], t["lead"], t["foto"]) + body + como(f) + sedes_block(f) + form(motivo=t["motivo"]) + faq_block()))
