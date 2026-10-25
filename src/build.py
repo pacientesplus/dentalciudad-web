@@ -112,12 +112,11 @@ MOTIVOS = [
     ("ortodoncia", "Ortodoncia", 6),
     ("conducto", "Conducto", 4),
     ("arreglo", "Arreglo", 2),
-    ("urgencia", "Dolor o urgencia", 3),
-    ("limpieza", "Limpieza o control", 1),
+    ("urgencia", "Urgencia", 3),
+    ("limpieza", "Limpieza", 1),
     ("ninos", "Niños", 3),
 ]
 PAGOS = [("particular", "Particular (efectivo, transferencia o tarjeta)"), ("obra", "Con obra social o prepaga")]
-CUANDO = [("hoy", "Hoy", 1.0), ("semana", "Esta semana", 0.9), ("mes", "Este mes", 0.6)]
 
 PRECIO_TXT = ("Atención particular. El valor de la consulta y valores aproximados de tu tratamiento te los pasamos por "
               "WhatsApp; el valor final te lo da el doctor personalmente en la consulta.")
@@ -468,7 +467,7 @@ def head(title, desc, path, assets, noindex=False, preload=None):
 
 
 def topbar(assets):
-    return f"""<a class="skip" href="#turno">Ir al formulario de turnos</a>
+    return f"""<a class="skip" href="#turno">Ir a pedir consulta</a>
 <header class="top">
 <div class="wrap top-row">
 <a class="mark" href="/" aria-label="{BRAND}, inicio"><img src="{assets['logo']}" alt="{BRAND}" width="236" height="56" decoding="async"></a>
@@ -525,20 +524,22 @@ def chips(name, items, checked=None):
 
 def form(motivo=None, sede=None):
     sede_items = [(k, f"{v['nombre']}, {v['ref']}") for k, v in SEDES.items()]
+    def paso(n, name, legend, cls, items, checked, err):
+        return (f'<fieldset class="paso" aria-describedby="err-{name}"><legend><span class="paso-n glass" aria-hidden="true"><b>{n}</b></span>'
+                f'<span class="paso-t">{legend}</span></legend><div class="opts {cls}">{chips(name, items, checked)}</div>'
+                f'<p class="error" id="err-{name}" hidden>{err}</p></fieldset>')
     return f"""<section class="section section-wash section-form" id="turno" aria-labelledby="h-form">
 <div class="wrap">
-<div class="form-head"><h2 id="h-form">Pedí tu turno por WhatsApp</h2>
-<p class="sub">Elegí cuatro cosas y se abre el WhatsApp de la sede con tu mensaje escrito. Te responde una persona de la recepción en el horario de atención.</p></div>
+<div class="form-head"><h2 id="h-form">Pedí tu consulta por WhatsApp</h2>
+<p class="sub">Tres pasos y se abre el WhatsApp de la sede con tu mensaje escrito. Te responde una persona de la recepción en el horario de atención.</p></div>
 <div class="form-panel">
 <form class="form" id="lead-form" novalidate>
-<fieldset aria-describedby="err-motivo"><legend>¿Qué querés resolver?</legend><div class="opts">{chips("motivo", MOTIVOS, motivo)}</div><p class="error" id="err-motivo" hidden>Elegí qué querés resolver.</p></fieldset>
-<fieldset aria-describedby="err-pago"><legend>¿Cómo pensás pagar?</legend><div class="opts opts-2">{chips("pago", PAGOS)}</div><p class="error" id="err-pago" hidden>Elegí cómo pensás pagar.</p></fieldset>
+{paso(1, "motivo", "¿Qué querés resolver?", "", MOTIVOS, motivo, "Elegí qué querés resolver.")}
+{paso(2, "pago", "¿Cómo pensás pagar?", "opts-2", PAGOS, None, "Elegí cómo pensás pagar.")}
 <div class="note" id="obra-note" hidden role="status">Por ahora atendemos de manera particular. Si querés venir igual, podés pagar en efectivo, por transferencia o con tarjeta.</div>
-<fieldset aria-describedby="err-cuando"><legend>¿Cuándo querés venir?</legend><div class="opts opts-3">{chips("cuando", CUANDO)}</div><p class="error" id="err-cuando" hidden>Elegí cuándo querés venir.</p></fieldset>
-<fieldset aria-describedby="err-sede"><legend>¿Qué sede te queda mejor?</legend><div class="opts opts-2">{chips("sede", sede_items, sede)}</div><p class="error" id="err-sede" hidden>Elegí una sede.</p></fieldset>
-<p class="price">{esc(PRECIO_TXT)}</p>
+{paso(3, "sede", "¿Qué sede te queda mejor?", "opts-2", sede_items, sede, "Elegí una sede.")}
 <div class="form-send"><button class="btn glass lit btn-big" type="submit">{ICO_WA}<span>Enviar por WhatsApp</span></button>
-<p class="hint">Se abre WhatsApp con tu mensaje escrito. No pedimos ni guardamos datos. <a href="/privacidad/">Privacidad</a></p></div>
+<p class="hint">{esc(PRECIO_TXT)} No pedimos ni guardamos datos. <a href="/privacidad/">Privacidad</a></p></div>
 </form>
 <div class="done" id="done" hidden role="status">
 <p class="done-title">Tu mensaje está listo</p>
@@ -557,7 +558,6 @@ def page_data(landing_sede):
         "sedes": {k: {"nombre": v["nombre"], "wa": v["wa"]} for k, v in SEDES.items()},
         "motivos": {k: {"label": l, "valor": val} for k, l, val in MOTIVOS},
         "pagos": {k: l for k, l in PAGOS},
-        "cuando": {k: {"label": l, "factor": f} for k, l, f in CUANDO},
     }
     return '<script type="application/json" id="dc-data">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 

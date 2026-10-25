@@ -23,12 +23,12 @@ Web de Dental Ciudad: una sola web, una página por sede (`/microcentro/`, `/onc
 - `public/` se genera con `python3 src/build.py` y no se edita a mano. Cloudflare Pages publica `public/`.
 
 ## El formulario (filtra, no adorna)
-Cuatro preguntas: qué querés resolver, cómo pensás pagar, cuándo querés venir y sede. No pide nombre ni teléfono.
-Abre el WhatsApp de la sede con el mensaje armado y un código `DC-XXXXX`.
+Tres pasos (Eduardo, 25/10: «tres pasitos nada más»): qué querés resolver, cómo pensás pagar y sede. No pide nombre ni
+teléfono. Abre el WhatsApp de la sede con el mensaje armado («Quiero / Pago / Sede / Código DC-XXXXX»).
 
 - Conversión a Google Ads solo si paga particular. Obra social / prepaga: aviso "atendemos de manera particular" y no cuenta.
-- Valor (puntos relativos, no plata) = tratamiento × cuándo. Tratamiento: implantes 10, prótesis 8, carillas 8,
-  ortodoncia 6, conducto 4, consulta 3, urgencia 3, arreglo 2, limpieza 1. Cuándo: hoy ×1, esta semana ×0,9, este mes ×0,6.
+- Valor (puntos relativos, no plata) = el del tratamiento: implantes 10, prótesis 8, carillas 8, ortodoncia 6, conducto 4,
+  consulta 3, urgencia 3, niños 3, arreglo 2, limpieza 1.
 - La conversión va a la cuenta de Google Ads de la sede elegida (`CONFIG.ads` en `src/site.js`).
 - Política de Google: la salud es categoría sensible. No se manda nombre, teléfono ni datos de salud, no se usan
   conversiones avanzadas ni se sube quién pagó. Nombres de conversión neutros ("Consulta web").

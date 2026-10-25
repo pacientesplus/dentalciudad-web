@@ -112,16 +112,19 @@
   }
 
   const syncObra = () => { $("obra-note").hidden = pick("pago") !== "obra"; };
+  const syncPasos = () => { form.querySelectorAll("fieldset.paso").forEach((fs) => { fs.classList.toggle("listo", !!fs.querySelector("input:checked")); }); };
   form.addEventListener("change", (e) => {
     const n = e.target.name;
     if (n) { const err = $("err-" + n); if (err) err.hidden = true; }
     if (n === "pago") syncObra();
+    syncPasos();
   });
   syncObra();
+  syncPasos();
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const v = { motivo: pick("motivo"), pago: pick("pago"), cuando: pick("cuando"), sede: pick("sede") };
+    const v = { motivo: pick("motivo"), pago: pick("pago"), sede: pick("sede") };
     const missing = Object.keys(v).filter((k) => !v[k]);
     missing.forEach((k) => { $("err-" + k).hidden = false; });
     if (missing.length) {
@@ -136,22 +139,21 @@
       "",
       "Quiero: " + D.motivos[v.motivo].label,
       "Pago: " + (v.pago === "obra" ? "con obra social o prepaga" : "particular"),
-      "Cuándo: " + D.cuando[v.cuando].label.toLowerCase(),
       "Sede: " + sede.nombre,
       "Código: " + ref
     ];
     const text = lines.join("\n");
     const url = "https://wa.me/" + sede.wa + "?text=" + encodeURIComponent(text);
 
-    /* Conversión: solo si paga particular. Valor = tratamiento × cuándo. Sin nombre, teléfono ni datos de salud.
+    /* Conversión: solo si paga particular. Valor = el del tratamiento. Sin nombre, teléfono ni datos de salud.
        Va a la cuenta de la sede de aterrizaje (la que pagó el clic); si entró por el inicio, a la de la sede elegida. */
     const ads = CONFIG.ads[landing] || CONFIG.ads[v.sede];
     if (v.pago === "particular" && typeof window.gtag === "function") {
-      const value = Math.round(D.motivos[v.motivo].valor * D.cuando[v.cuando].factor * 10) / 10;
+      const value = D.motivos[v.motivo].valor;
       if (ads && ads.id && ads.label) {
         window.gtag("event", "conversion", { send_to: ads.id + "/" + ads.label, value, currency: CONFIG.currency, transaction_id: ref });
       }
-      if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede, aterrizaje: landing || "inicio", motivo: v.motivo, cuando: v.cuando });
+      if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede, aterrizaje: landing || "inicio", motivo: v.motivo });
     }
 
     $("done-code").textContent = ref;
