@@ -1,0 +1,20 @@
+KIT DE MARCA DENTAL CIUDAD (generado 2026-10-25)
+
+Colores
+  Verde logo     #7DC41A  solo para el logo y detalles gráficos (sobre blanco da 2.1:1, no alcanza para texto)
+  Verde texto    #2E7D1F  botones, enlaces y texto en verde (sobre blanco 5.2:1, pasa WCAG AA)
+  Gris logo      #5E5E5E
+  Carbón         #1B1B1B  títulos y texto (el negro del logotipo)
+
+Carpetas
+  png/    isotipo-2048/1024/512 · logotipo-dentalciudad (+ blanco) · logo-vertical · logo-horizontal (+ blanco). Fondo transparente.
+  svg/    logotipo e isotipo vectorizados: para la web y para imprimir a cualquier tamaño.
+  web/    favicon.ico (16/32/48) · favicon-96.png · favicon.svg · apple-touch-icon.png (180) · icon-192 · icon-512 · icon-512-maskable · og.jpg (1200x630, para compartir enlaces)
+  redes/  google-perfil-logo-720 (logo de la ficha de Google) · google-portada-1024x576 · instagram-facebook-perfil-1080 · whatsapp-perfil-640
+
+Qué va dónde
+  Ficha de Google: logo = redes/google-perfil-logo-720.png · portada = redes/google-portada-1024x576.jpg
+  Instagram / Facebook: redes/instagram-facebook-perfil-1080.png
+  WhatsApp Business: redes/whatsapp-perfil-640.png
+  Web: todo lo de web/ (la web nueva ya lo usa)
+  Imprenta, cartelería, recetarios: svg/
