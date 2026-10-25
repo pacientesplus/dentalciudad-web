@@ -171,6 +171,33 @@ ul{margin:0;padding:0;list-style:none}
 .sede-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:6px}
 @media (min-width:760px){.sedes{grid-template-columns:1fr 1fr;gap:32px}.sede-body{padding:26px 28px 28px}}
 
+.sede-links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:2px}
+.sede-links .ig{display:inline-flex;align-items:center;gap:6px}
+.sede-links .ig .ico{width:18px;height:18px}
+
+/* en Google y en Instagram */
+.social{display:grid;gap:32px}
+.gcards{display:grid;gap:14px}
+.gcard{background:var(--panel);border:1px solid rgba(127,157,160,.35);border-radius:var(--r);padding:18px 20px;display:grid;gap:6px;box-shadow:0 10px 30px rgba(4,106,120,.08)}
+.gcard-top{display:flex;align-items:center;gap:8px;font-size:1.05rem;color:var(--muted)}
+.gcard-top strong{font-size:1.6rem;color:var(--ink);letter-spacing:-.02em}
+.gcard-top .star{width:22px;height:22px}
+.gcard h3{font-size:1.15rem}
+.gcard-n{color:var(--muted)}
+.gcard-links{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:8px}
+.gcard-links .btn{min-height:44px;padding:0 18px;font-size:.98rem}
+.igbox h3{font-size:1.15rem;margin-bottom:12px}
+.igs{display:grid;gap:10px}
+.igs a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:999px;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid rgba(127,157,160,.35);box-shadow:0 6px 16px rgba(4,106,120,.07)}
+.igs a:hover{border-color:var(--teal)}
+.igs .ico{color:var(--brand);width:22px;height:22px}
+.igs span{display:grid;line-height:1.25}
+.igs small{color:var(--muted);font-size:.9rem}
+@media (min-width:600px){.gcards{grid-template-columns:1fr 1fr}}
+@media (min-width:900px){.social{grid-template-columns:1.4fr 1fr;gap:56px;align-items:start}.igbox{padding-top:62px}}
+.foot-ig a{text-decoration:none}
+.foot-ig a:hover{text-decoration:underline}
+
 /* formulario */
 .form-panel{background:var(--panel);border:1px solid rgba(127,157,160,.35);border-radius:var(--r);padding:20px 16px;max-width:760px;box-shadow:0 10px 30px rgba(4,106,120,.08)}
 .form{display:grid;gap:18px}

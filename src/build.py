@@ -33,7 +33,10 @@ SITE = "https://dentalciudad.ar"
 BRAND = "Dental Ciudad"
 TODAY = date.today().isoformat()
 ANIOS = "8"
-INSTAGRAM = "https://www.instagram.com/dentalciudad1/"
+# Instagram (Eduardo, 25/10): tres cuentas. La de cada sede va en su tarjeta y en su página; las tres, en «En Google y en Instagram» y en el pie.
+INSTAGRAMS = [("dentalciudad", "Dental Ciudad"), ("dentalciudad1", "Dental Ciudad Once"), ("dentalmicrocentro", "Dental Microcentro")]
+IG = lambda h: f"https://www.instagram.com/{h}/"
+INSTAGRAM = IG("dentalciudad")
 EMAIL = "dentalciudad1@gmail.com"
 RESPONSABLE = ""   # FALTA: "Od. Nombre Apellido, M.N. 12345" (responsable para el pie; lo pasa Eduardo)
 
@@ -58,6 +61,7 @@ SEDES = {
         "horario": [("Lunes", "9:00 a 18:30"), ("Martes a viernes", "9:00 a 18:00"), ("Sábados", "9:00 a 13:00"), ("Domingos", "cerrado")],
         "horario_ld": [("Monday", "09:00", "18:30"), (["Tuesday", "Wednesday", "Thursday", "Friday"], "09:00", "18:00"), ("Saturday", "09:00", "13:00")],
         "sabado_urgencias": "9:00 a 13:00",
+        "instagram": "dentalmicrocentro",
         "foto": "micro-recepcion",
         "foto_alt": "Recepción de la sede Microcentro de Dental Ciudad, en Av. Córdoba 679",
         "transporte": "Subte B (Florida) y C (Lavalle) a dos cuadras; colectivos por Av. Córdoba.",
@@ -78,6 +82,7 @@ SEDES = {
         "horario": [("Lunes", "9:00 a 17:00"), ("Martes a sábados", "9:00 a 18:00"), ("Domingos", "cerrado")],
         "horario_ld": [("Monday", "09:00", "17:00"), (["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "09:00", "18:00")],
         "sabado_urgencias": "9:00 a 18:00",
+        "instagram": "dentalciudad1",
         "foto": "once-box",
         "foto_alt": "Consultorio de la sede Once de Dental Ciudad, con una odontóloga atendiendo",
         "transporte": "Subte A y H (Plaza Miserere), tren Sarmiento (estación Once) y decenas de colectivos.",
@@ -85,7 +90,8 @@ SEDES = {
 }
 for s in SEDES.values():
     s["maps"] = f"https://www.google.com/maps/search/?api=1&query={BRAND.replace(' ', '%20')}%20{s['nombre']}&query_place_id={s['place_id']}"
-    s["reviews"] = s["maps"]
+    s["reviews"] = f"https://search.google.com/local/reviews?placeid={s['place_id']}"
+    s["resenar"] = f"https://search.google.com/local/writereview?placeid={s['place_id']}"
 RESENAS_TOTAL = sum(int(s["rating"][1]) for s in SEDES.values())
 
 # Fotos: nombre público → (archivo original en fotos/, recorte (izq, arriba, der, abajo) o None, texto alternativo).
@@ -228,6 +234,7 @@ FAQ = [
 ICO_WA = ('<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>')
 ICO_TEL = ('<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>')
 ICO_STAR = '<svg class="star" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.7.8-4.9 4.6 1.3 6.6L12 17.3l-6 3.3 1.3-6.6L2.4 9.4l6.7-.8z"/></svg>'
+ICO_IG = ('<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>')
 ICO_PIN = ('<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>')
 
 
@@ -411,14 +418,14 @@ def ld_json(f):
     org_id = SITE + "/#org"
     graph = [{
         "@type": "Organization", "@id": org_id, "name": BRAND, "url": SITE + "/", "email": EMAIL,
-        "logo": SITE + "/icon-512.png", "sameAs": [INSTAGRAM],
+        "logo": SITE + "/icon-512.png", "sameAs": [IG(h) for h, _ in INSTAGRAMS],
     }]
     for slug, s in SEDES.items():
         img = f[s["foto"]]["webp"][max(f[s["foto"]]["webp"])]
         graph.append({
             "@type": "Dentist", "@id": f"{SITE}/{slug}/#sede", "name": f"{BRAND} {s['nombre']}",
             "url": f"{SITE}/{slug}/", "telephone": s["tel"], "image": SITE + img,
-            "parentOrganization": {"@id": org_id}, "sameAs": [INSTAGRAM],
+            "parentOrganization": {"@id": org_id}, "sameAs": [IG(s["instagram"])],
             "currenciesAccepted": "ARS", "paymentAccepted": "Efectivo, transferencia, tarjeta",
             "address": {"@type": "PostalAddress", "streetAddress": s["calle"], "addressLocality": "Ciudad Autónoma de Buenos Aires",
                         "postalCode": s["cp"], "addressRegion": "CABA", "addressCountry": "AR"},
@@ -487,8 +494,8 @@ def rating_line(sede=None):
         return (f'<p class="rating">{ICO_STAR}<span><strong>{s["rating"][0]}</strong> en Google, con {s["rating"][1]} reseñas de pacientes de esta sede.</span> '
                 f'<a href="{esc(s["reviews"])}" target="_blank" rel="noopener">Leer reseñas</a></p>')
     m, o = SEDES["microcentro"], SEDES["once"]
-    return (f'<p class="rating">{ICO_STAR}<span><strong>{m["rating"][0]}</strong> en Google en Microcentro y <strong>{o["rating"][0]}</strong> en Once, '
-            f'con {RESENAS_TOTAL} reseñas.</span> <a href="{esc(m["reviews"])}" target="_blank" rel="noopener">Leer reseñas</a></p>')
+    return (f'<p class="rating">{ICO_STAR}<span><strong>{m["rating"][0]}</strong> en Google en <a href="{esc(m["reviews"])}" target="_blank" rel="noopener">Microcentro</a> '
+            f'y <strong>{o["rating"][0]}</strong> en <a href="{esc(o["reviews"])}" target="_blank" rel="noopener">Once</a>, con {RESENAS_TOTAL} reseñas de pacientes.</span></p>')
 
 
 def hero(f, h1, lead, foto, eager=True, cta_sede=None, chips_html=""):
@@ -603,6 +610,22 @@ def equipo():
 </div></section>"""
 
 
+def social():
+    """En Google y en Instagram: la nota real de cada sede con enlace a las reseñas y a dejar una, y las tres cuentas."""
+    cards = ""
+    for slug, s in SEDES.items():
+        cards += (f'<li class="gcard"><p class="gcard-top">{ICO_STAR}<strong>{s["rating"][0]}</strong><span>en Google</span></p>'
+                  f'<h3>Sede {esc(s["nombre"])}</h3><p class="gcard-n">{s["rating"][1]} reseñas de pacientes</p>'
+                  f'<p class="gcard-links"><a class="btn glass" href="{esc(s["reviews"])}" target="_blank" rel="noopener"><span>Leer reseñas</span></a>'
+                  f'<a class="textlink" href="{esc(s["resenar"])}" target="_blank" rel="noopener">Dejar una reseña</a></p></li>')
+    igs = "".join(f'<li><a href="{IG(h)}" target="_blank" rel="noopener">{ICO_IG}<span><strong>@{h}</strong><small>{esc(n)}</small></span></a></li>' for h, n in INSTAGRAMS)
+    return f"""<section class="section section-wash" id="opiniones" aria-labelledby="h-op"><div class="wrap social">
+<div><div class="section-head"><h2 id="h-op">En Google y en Instagram</h2><p class="sub">Las opiniones están en Google, escritas por los pacientes de cada sede. En Instagram mostramos el día a día del consultorio.</p></div>
+<ul class="gcards">{cards}</ul></div>
+<div class="igbox"><h3>Seguinos</h3><ul class="igs">{igs}</ul></div>
+</div></section>"""
+
+
 def tecnologia(f):
     return f"""<section class="section" id="tecnologia" aria-labelledby="h-tec"><div class="wrap">
 <div class="section-head"><h2 id="h-tec">Tecnología en el consultorio</h2><p class="sub">Lo que hace falta para diagnosticar bien está en la misma sala, no en otro lado.</p></div>
@@ -626,12 +649,12 @@ def sede_card(f, slug, s):
 <h3><a href="/{slug}/">Sede {esc(s["nombre"])}</a></h3>
 <p class="addr">{ICO_PIN}<span>{esc(s['calle'])}, {esc(s['ref'])}. {esc(s['acceso'])}.</span></p>
 {horario_html(s)}
-<p class="rating rating-small">{ICO_STAR}<span><strong>{s['rating'][0]}</strong> en Google, {s['rating'][1]} reseñas</span></p>
+<p class="rating rating-small">{ICO_STAR}<span><strong>{s['rating'][0]}</strong> en Google, <a href="{esc(s['reviews'])}" target="_blank" rel="noopener">{s['rating'][1]} reseñas</a></span></p>
 <div class="sede-ctas">
 <a class="btn glass lit" href="https://wa.me/{s['wa']}" target="_blank" rel="noopener">{ICO_WA}<span>WhatsApp {esc(s['tel_label'])}</span></a>
 <a class="btn glass" href="tel:{s['tel']}" data-llamar="{slug}">{ICO_TEL}<span>Llamar</span></a>
-<a class="textlink" href="{esc(s['maps'])}" target="_blank" rel="noopener">Cómo llegar</a>
 </div>
+<p class="sede-links"><a class="textlink" href="{esc(s['maps'])}" target="_blank" rel="noopener">Cómo llegar</a><a class="textlink ig" href="{IG(s['instagram'])}" target="_blank" rel="noopener">{ICO_IG}@{s['instagram']}</a></p>
 </div>
 </li>"""
 
@@ -660,7 +683,7 @@ def foot(assets, landing_sede=None):
 <div class="wrap foot-grid">
 <div class="foot-brand"><img src="{assets['logo_blanco']}" alt="{BRAND}" width="260" height="65" loading="lazy" decoding="async">
 <p>Clínica odontológica en Microcentro y Once, Ciudad de Buenos Aires. Atención particular, de lunes a sábado.</p>
-<p><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a></p>{resp}</div>
+<p class="foot-ig">Instagram: {" · ".join(f'<a href="{IG(h)}" target="_blank" rel="noopener">@{h}</a>' for h, _ in INSTAGRAMS)}</p>{resp}</div>
 {cols}
 <div class="foot-col foot-links"><h3>Tratamientos</h3>{trat}</div>
 </div>
@@ -703,7 +726,7 @@ def build():
         hero(f, "Tu dentista en Microcentro y Once",
              "Implantes, prótesis, carillas, ortodoncia, conductos y odontopediatría. Dos sedes en el centro de Buenos Aires, con turnos de lunes a sábado.",
              "hero")
-        + sedes_block(f) + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + form() + faq_block()))
+        + sedes_block(f) + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + social() + form() + faq_block()))
     urls.append("/")
 
     for slug, s in SEDES.items():
@@ -726,7 +749,7 @@ def build():
             f"Dental Ciudad sede {s['nombre']}: {s['calle']}, {s['ref']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos. Atención particular.",
             hero(f, f"Dentista en {s['nombre']}", f"{cap(s['ref'])}. {s['acceso']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos, con turnos de lunes a sábado.",
                  s["foto"], cta_sede=slug)
-            + body + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + form(sede=slug) + faq_block(), sede=slug))
+            + body + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + social() + form(sede=slug) + faq_block(), sede=slug))
         urls.append(f"/{slug}/")
 
     for t in TRATAMIENTOS:
