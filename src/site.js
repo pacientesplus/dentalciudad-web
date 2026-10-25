@@ -80,6 +80,12 @@
     b.addEventListener("click", showConsent);
   });
 
+  /* Menú del teléfono: se cierra al elegir */
+  document.querySelectorAll("details.menu").forEach((m) => {
+    m.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => { m.open = false; }));
+    document.addEventListener("click", (e) => { if (m.open && !m.contains(e.target)) m.open = false; });
+  });
+
   /* Formulario */
   const dataEl = $("dc-data");
   const form = $("lead-form");
@@ -154,10 +160,15 @@
     if (window.top === window.self) setTimeout(() => { location.href = url; }, 400);
   });
 
-  /* Botón fijo: se esconde cuando el formulario está a la vista */
+  /* Botón fijo: se esconde mientras los botones de la portada o el formulario están a la vista */
   const sticky = $("sticky");
-  const card = $("turno");
-  if (sticky && card && "IntersectionObserver" in window) {
-    new IntersectionObserver((en) => { sticky.hidden = en[0].isIntersecting; }).observe(card);
+  const watch = [document.querySelector(".hero .ctas"), $("turno")].filter(Boolean);
+  if (sticky && watch.length && "IntersectionObserver" in window) {
+    const seen = new Map();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => seen.set(en.target, en.isIntersecting));
+      sticky.hidden = Array.from(seen.values()).some(Boolean);
+    });
+    watch.forEach((el) => io.observe(el));
   }
 })();

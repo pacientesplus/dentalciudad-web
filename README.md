@@ -1,10 +1,18 @@
 # dentalciudad.ar
 
 Marca: `marca/` (kit generado con `src/make_brand.py`; la web usa el logo original; la variante `verde-agua` queda en el kit y se cambia con `LOGO_VARIANTE` en `src/build.py`). Análisis de estándares y decisiones: `PLAN.md`.
-Lighthouse móvil del 25/10: rendimiento 99, accesibilidad 100, buenas prácticas 100, SEO 100.
+Fotos: originales en `fotos/`; recortes, textos alternativos y tamaños en `FOTOS` de `src/build.py` (se generan en AVIF y WebP
+a 480/800/1200/1600 px, con caché en `.cache/img/`). Letra: Figtree variable alojada en `src/fonts/` (sin pedidos a Google Fonts).
+Lighthouse móvil del 25/10 (versión 3): rendimiento 100, accesibilidad 100, buenas prácticas 100, SEO 100.
+
+Estructura de la portada (versión 3, 25/10): cabecera con menú y botón · portada con foto del consultorio, botones y nota de
+Google · tratamientos (9, cada uno con su página) · cómo trabajamos (foto + 4 puntos) · tecnología (radiovisiógrafo, escáner 3D)
+· las sedes (foto, dirección, horarios, nota de Google, WhatsApp, llamar, cómo llegar) · pedí tu turno (el formulario de 4
+preguntas) · preguntas frecuentes · pie. Las páginas de sede y de tratamiento repiten el esquema con su foto y el formulario
+preseleccionado.
 
 Web de Dental Ciudad: una sola web, una página por sede (`/microcentro/`, `/once/`) y una por tratamiento
-(`/implantes/`, `/protesis/`, `/carillas/`, `/ortodoncia/`, `/conducto/`, `/urgencias/`). Aparte de todo lo demás
+(`/implantes/`, `/protesis/`, `/carillas/`, `/ortodoncia/`, `/conducto/`, `/arreglos/`, `/limpieza/`, `/urgencias/`, `/ninos/`). Aparte de todo lo demás
 (no toca el servidor "edu", la agenda ni la caja).
 
 - `src/` es lo que se edita: textos y datos en `src/build.py`, estilos en `src/site.css`, comportamiento en `src/site.js`.
@@ -23,7 +31,7 @@ Abre el WhatsApp de la sede con el mensaje armado y un código `DC-XXXXX`.
 
 ## Falta
 - `CONFIG` en `src/site.js`: Analytics y, por sede, el AW-… y la etiqueta de "Consulta web".
-- `RESPONSABLE` en `src/build.py` (nombre y matrícula para el pie) y fotos reales.
+- `RESPONSABLE` en `src/build.py` (nombre y matrícula para el pie); sección «Equipo» cuando estén los nombres.
 - Confirmar horarios (hoy, los de la ficha de Google).
 - Que la caja reconozca el código `DC-…` del mensaje (lo hace Code en caja-whatsapp).
 - Dominio: dentalciudad.ar a este proyecto y dentalmicrocentro.ar redirigido a /microcentro/ (con OK de Eduardo).
