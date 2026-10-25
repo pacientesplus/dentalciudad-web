@@ -118,7 +118,26 @@
     if (n) { const err = $("err-" + n); if (err) err.hidden = true; }
     if (n === "pago") syncObra();
     syncPasos();
+    if (n) avanzar(e.target.closest("fieldset.paso"));
   });
+
+  /* Al elegir una opción, la pantalla sube sola hasta el próximo paso sin responder (o el botón de enviar) y lo deja a
+     un tercio de la altura, donde está el dedo (Eduardo, 25/10). */
+  const reducir = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function avanzar(fs) {
+    if (!fs) return;
+    const pasos = Array.from(form.querySelectorAll("fieldset.paso"));
+    const resto = pasos.slice(pasos.indexOf(fs) + 1);
+    let destino = resto.find((p) => !p.querySelector("input:checked"));
+    if (!destino) destino = form.querySelector(".form-send");
+    if (!destino) return;
+    const nota = $("obra-note");
+    if (fs.querySelector('input[name="pago"]') && nota && !nota.hidden) destino = nota;
+    setTimeout(() => {
+      const y = destino.getBoundingClientRect().top + window.scrollY - window.innerHeight / 3;
+      window.scrollTo({ top: Math.max(0, y), behavior: reducir ? "auto" : "smooth" });
+    }, 120);
+  }
   syncObra();
   syncPasos();
 
