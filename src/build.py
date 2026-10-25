@@ -533,7 +533,7 @@ def form(motivo=None, sede=None):
     sede_items = [(k, f"{v['nombre']}, {v['ref']}") for k, v in SEDES.items()]
     def paso(n, name, legend, cls, items, checked, err):
         return (f'<fieldset class="paso" aria-describedby="err-{name}"><legend><span class="paso-n glass" aria-hidden="true"><b>{n}</b></span>'
-                f'<span class="paso-t">{legend}</span></legend><div class="opts {cls}">{chips(name, items, checked)}</div>'
+                f'<span class="paso-t">{legend}</span><span class="paso-hint">Elegí una opción</span></legend><div class="opts {cls}">{chips(name, items, checked)}</div>'
                 f'<p class="error" id="err-{name}" hidden>{err}</p></fieldset>')
     return f"""<section class="section section-wash section-form" id="turno" aria-labelledby="h-form">
 <div class="wrap">

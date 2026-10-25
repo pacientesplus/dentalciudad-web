@@ -119,11 +119,51 @@
     if (n === "pago") syncObra();
     syncPasos();
     if (n) avanzar(e.target.closest("fieldset.paso"));
+    pausa = false;
+    setTimeout(demo, 1100);
   });
+
+  const reducir = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Pista: «Elegí una opción» en el primer paso sin responder y una mano que va tocando opciones de ese paso, sin
+     elegirlas. Se va cuando la persona toca el formulario y vuelve en el paso siguiente. */
+  const panel = form.closest(".form-panel");
+  const mano = el("div", "mano");
+  mano.setAttribute("aria-hidden", "true");
+  mano.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>';
+  if (panel) panel.appendChild(mano);
+  let manoT = null, visible = false, pausa = false;
+  const pasosAll = () => Array.from(form.querySelectorAll("fieldset.paso"));
+  const activo = () => pasosAll().find((p) => !p.querySelector("input:checked"));
+  function apagarMano() { clearTimeout(manoT); mano.classList.remove("on", "tap"); form.querySelectorAll(".pista").forEach((o) => o.classList.remove("pista")); }
+  function demo() {
+    apagarMano();
+    const fs = activo();
+    pasosAll().forEach((p) => p.classList.toggle("activo", p === fs));
+    if (!fs || !panel || !visible || pausa || reducir) return;
+    const opts = Array.from(fs.querySelectorAll(".opt span")).slice(0, 4);
+    let i = 0;
+    const paso = () => {
+      const o = opts[i % opts.length];
+      const pr = panel.getBoundingClientRect(), r = o.getBoundingClientRect();
+      mano.style.transform = "translate(" + (r.left - pr.left + r.width * 0.8 - 21) + "px," + (r.top - pr.top + r.height * 0.5 - 9) + "px)";
+      mano.classList.add("on");
+      manoT = setTimeout(() => {
+        mano.classList.add("tap"); o.classList.add("pista");
+        manoT = setTimeout(() => {
+          mano.classList.remove("tap"); o.classList.remove("pista"); i++;
+          manoT = setTimeout(paso, i % opts.length === 0 ? 1400 : 450);
+        }, 380);
+      }, 850);
+    };
+    paso();
+  }
+  if (panel && "IntersectionObserver" in window) {
+    new IntersectionObserver((en) => { visible = en[0].isIntersecting; demo(); }, { threshold: 0.25 }).observe(panel);
+  }
+  if (panel) panel.addEventListener("pointerdown", () => { pausa = true; apagarMano(); });
 
   /* Al elegir una opción, la pantalla sube sola hasta el próximo paso sin responder (o el botón de enviar) y lo deja a
      un tercio de la altura, donde está el dedo (Eduardo, 25/10). */
-  const reducir = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function avanzar(fs) {
     if (!fs) return;
     const pasos = Array.from(form.querySelectorAll("fieldset.paso"));
