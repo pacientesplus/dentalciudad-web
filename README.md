@@ -31,7 +31,7 @@ Abre el WhatsApp de la sede con el mensaje armado y un código `DC-XXXXX`.
 
 ## Falta
 - `CONFIG` en `src/site.js`: Analytics y, por sede, el AW-… y la etiqueta de "Consulta web".
-- `RESPONSABLE` en `src/build.py` (nombre y matrícula para el pie); sección «Equipo» cuando estén los nombres.
+- `RESPONSABLE` en `src/build.py` (nombre y matrícula para el pie). «El equipo» va por especialidades, sin nombres (Eduardo, 25/10).
 - Confirmar horarios (hoy, los de la ficha de Google).
 - Que la caja reconozca el código `DC-…` del mensaje (lo hace Code en caja-whatsapp).
 - Dominio: dentalciudad.ar a este proyecto y dentalmicrocentro.ar redirigido a /microcentro/ (con OK de Eduardo).

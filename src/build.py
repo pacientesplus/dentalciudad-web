@@ -470,11 +470,11 @@ def topbar(assets):
 <div class="wrap top-row">
 <a class="mark" href="/" aria-label="{BRAND}, inicio"><img src="{assets['logo']}" alt="{BRAND}" width="236" height="56" decoding="async"></a>
 <nav class="topnav" aria-label="Secciones">
-<a href="/#tratamientos">Tratamientos</a><a href="/#sedes">Sedes</a><a href="/microcentro/">Microcentro</a><a href="/once/">Once</a><a href="/#preguntas">Preguntas</a>
+<a href="/#tratamientos">Tratamientos</a><a href="/#equipo">Equipo</a><a href="/#sedes">Sedes</a><a href="/microcentro/">Microcentro</a><a href="/once/">Once</a><a href="/#preguntas">Preguntas</a>
 </nav>
 <a class="btn glass lit btn-top" href="#turno">Pedir turno</a>
 <details class="menu"><summary aria-label="Menú"><span></span><span></span><span></span></summary>
-<nav aria-label="Secciones"><a href="/#tratamientos">Tratamientos</a><a href="/#sedes">Sedes</a><a href="/microcentro/">Sede Microcentro</a><a href="/once/">Sede Once</a><a href="/#preguntas">Preguntas</a><a href="#turno">Pedir turno</a></nav></details>
+<nav aria-label="Secciones"><a href="/#tratamientos">Tratamientos</a><a href="/#equipo">Equipo</a><a href="/#sedes">Sedes</a><a href="/microcentro/">Sede Microcentro</a><a href="/once/">Sede Once</a><a href="/#preguntas">Preguntas</a><a href="#turno">Pedir turno</a></nav></details>
 </div>
 </header>"""
 
@@ -572,12 +572,31 @@ def como(f):
 <div class="split-text">
 <h2 id="h-como">Cómo trabajamos</h2>
 <dl class="puntos">
-<div><dt>Un odontólogo para cada tratamiento</dt><dd>El que hace implantes hace implantes; el que hace ortodoncia, ortodoncia. En la primera consulta te revisa quien te va a tratar.</dd></div>
+<div><dt>Un odontólogo para cada tratamiento</dt><dd>Endodoncia, ortodoncia, cirugía maxilofacial, odontopediatría, prótesis y estética, cada una con el suyo. En la primera consulta te revisa quien te va a tratar.</dd></div>
 <div><dt>Imágenes en el momento</dt><dd>Radiografías digitales en el sillón y escáner 3D para tomar medidas sin pasta de impresión. Ves en la pantalla lo mismo que ve el doctor.</dd></div>
 <div><dt>Sabés qué se va a hacer antes de empezar</dt><dd>Te explican el plan paso a paso y te dan el presupuesto por escrito. Atención particular: efectivo, transferencia o tarjeta.</dd></div>
 <div><dt>{ANIOS} años en el centro de la ciudad</dt><dd>Dos sedes, en Microcentro y en Once, con turnos de lunes a sábado y urgencias los sábados.</dd></div>
 </dl>
 </div>
+</div></section>"""
+
+
+EQUIPO = [
+    ("Endodoncia", "Tratamientos de conducto: salvar el diente que duele en vez de sacarlo.", "/conducto/"),
+    ("Ortodoncia", "Brackets y alineadores invisibles.", "/ortodoncia/"),
+    ("Cirugía maxilofacial", "Implantes, extracciones complejas y muelas de juicio.", "/implantes/"),
+    ("Odontopediatría", "Chicos desde los primeros dientes.", "/ninos/"),
+    ("Prótesis", "Flexibles, removibles y completas, a medida.", "/protesis/"),
+    ("Estética", "Diseño de sonrisa, carillas de porcelana y carillas de resina.", "/carillas/"),
+]
+
+
+def equipo():
+    items = "".join(f'<li><a href="{u}"><strong>{esc(t)}</strong><span>{esc(d)}</span></a></li>' for t, d, u in EQUIPO)
+    return f"""<section class="section" id="equipo" aria-labelledby="h-equipo"><div class="wrap">
+<div class="section-head"><h2 id="h-equipo">El equipo</h2><p class="sub">No hay un dentista que hace de todo: cada área la atiende el odontólogo que se dedica a eso.</p></div>
+<ul class="tiles">{items}</ul>
+<p class="labs">Las prótesis, las carillas y las coronas se hacen con varios de los mejores laboratorios odontológicos de la ciudad.</p>
 </div></section>"""
 
 
@@ -681,7 +700,7 @@ def build():
         hero(f, "Tu dentista en Microcentro y Once",
              "Implantes, prótesis, carillas, ortodoncia, conductos y odontopediatría. Dos sedes en el centro de Buenos Aires, con turnos de lunes a sábado.",
              "hero")
-        + tratamientos_grid() + como(f) + tecnologia(f) + sedes_block(f) + form() + faq_block()))
+        + tratamientos_grid() + como(f) + equipo() + tecnologia(f) + sedes_block(f) + form() + faq_block()))
     urls.append("/")
 
     for slug, s in SEDES.items():
@@ -704,7 +723,7 @@ def build():
             f"Dental Ciudad sede {s['nombre']}: {s['calle']}, {s['ref']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos. Atención particular.",
             hero(f, f"Dentista en {s['nombre']}", f"{cap(s['ref'])}. {s['acceso']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos, con turnos de lunes a sábado.",
                  s["foto"], cta_sede=slug)
-            + body + tratamientos_grid() + como(f) + form(sede=slug) + faq_block(), sede=slug))
+            + body + tratamientos_grid() + como(f) + equipo() + form(sede=slug) + faq_block(), sede=slug))
         urls.append(f"/{slug}/")
 
     for t in TRATAMIENTOS:
