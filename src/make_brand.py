@@ -140,6 +140,10 @@ def contrast(hex1, hex2):
 
 
 def main(iso_path, vert_path, word_path):
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
+    except Exception:
+        font = ImageFont.load_default()
     iso = key_white(np.array(Image.open(iso_path).convert("RGB")))
     vert = key_white(np.array(Image.open(vert_path).convert("RGB")))
     word = key_white(np.array(Image.open(word_path).convert("RGB")))
@@ -187,11 +191,11 @@ def main(iso_path, vert_path, word_path):
             wgreen |= comp
     wblack = wa & ~wgreen
     scale = 0.25
-    body = (f'<path fill="{CARBON}" d="{trace_mask(wblack, scale)}"/>'
-            f'<path fill="{VERDE_LOGO}" d="{trace_mask(wgreen, scale)}"/>')
+    body_word = (f'<path fill="{CARBON}" d="{trace_mask(wblack, scale)}"/>'
+                 f'<path fill="{VERDE_LOGO}" d="{trace_mask(wgreen, scale)}"/>')
     with open(ensure("svg", "logotipo-dentalciudad.svg"), "w") as f:
-        f.write(svg_doc(word.shape[1], word.shape[0], body))
-    body_w = body.replace(f'fill="{CARBON}"', 'fill="#FFFFFF"')
+        f.write(svg_doc(word.shape[1], word.shape[0], body_word))
+    body_w = body_word.replace(f'fill="{CARBON}"', 'fill="#FFFFFF"')
     with open(ensure("svg", "logotipo-dentalciudad-blanco.svg"), "w") as f:
         f.write(svg_doc(word.shape[1], word.shape[0], body_w))
     # isotipo: verde con degradé y gris con degradé
@@ -273,6 +277,62 @@ Qué va dónde
   Web: todo lo de web/ (la web nueva ya lo usa)
   Imprenta, cartelería, recetarios: svg/
 """)
+
+
+    # ---- Logo horizontal en SVG (isotipo + logotipo anidados)
+    def horizontal_svg(iso_body, iso_defs, iso_w, iso_h, word_body, word_w, word_h):
+        H_ = 460.0
+        iso_hh = 420.0; iso_ww = iso_w * iso_hh / iso_h
+        word_hh = 230.0; word_ww = word_w * word_hh / word_h
+        gap = 36.0; W_ = 20 + iso_ww + gap + word_ww + 20
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W_:.0f} {H_:.0f}" width="{W_:.0f}" height="{H_:.0f}">'
+                f'<defs>{iso_defs}</defs>'
+                f'<svg x="20" y="{(H_ - iso_hh) / 2:.1f}" width="{iso_ww:.1f}" height="{iso_hh}" viewBox="0 0 {iso_w} {iso_h}">{iso_body}</svg>'
+                f'<svg x="{20 + iso_ww + gap:.1f}" y="{(H_ - word_hh) / 2 + 10:.1f}" width="{word_ww:.1f}" height="{word_hh}" viewBox="0 0 {word_w} {word_h}">{word_body}</svg>'
+                '</svg>')
+    with open(ensure("svg", "logo-horizontal.svg"), "w") as f:
+        f.write(horizontal_svg(body, defs, w, h, body_word, word.shape[1], word.shape[0]))
+
+    # ---- Variante "verde agua" (pedido de Eduardo, 25/10): el verde del logo corrido hacia el verde agua
+    import colorsys
+    def shift_hex(hx, dh):
+        r, g_, b = [int(hx[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        hh, ss, vv = colorsys.rgb_to_hsv(r, g_, b)
+        r, g_, b = colorsys.hsv_to_rgb((hh + dh) % 1.0, ss, vv)
+        return "#%02X%02X%02X" % (round(r * 255), round(g_ * 255), round(b * 255))
+    DH = (168 - 88) / 360.0   # lima (~88°) → verde agua (~168°)
+    def shift_rgba(rgba):
+        out = rgba.copy()
+        rgbf = out[..., :3].astype(np.float32) / 255.0
+        hsv = cv2.cvtColor(rgbf, cv2.COLOR_RGB2HSV)   # H en grados 0..360
+        greenish = (out[..., 3] > 0) & (hsv[..., 1] > 0.25) & (hsv[..., 0] > 60) & (hsv[..., 0] < 120)
+        hsv[..., 0] = np.where(greenish, (hsv[..., 0] + DH * 360) % 360, hsv[..., 0])
+        rgb2 = (cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB) * 255).clip(0, 255).astype(np.uint8)
+        out[..., :3] = np.where(greenish[..., None], rgb2, out[..., :3])
+        return out
+    AGUA = shift_hex(VERDE_LOGO, DH)
+    to_pil(shift_rgba(np.array(fit(ISO, 1024, 1024)))).save(ensure("verde-agua", "isotipo-1024.png"), optimize=True)
+    to_pil(shift_rgba(np.array(WORD))).save(ensure("verde-agua", "logotipo-dentalciudad.png"), optimize=True)
+    to_pil(shift_rgba(np.array(H))).save(ensure("verde-agua", "logo-horizontal.png"), optimize=True)
+    to_pil(shift_rgba(np.array(VERT))).save(ensure("verde-agua", "logo-vertical.png"), optimize=True)
+    defs_a = defs.replace("#A6DC1E", shift_hex("#A6DC1E", DH)).replace("#5FB80E", shift_hex("#5FB80E", DH))
+    body_word_a = body_word.replace(VERDE_LOGO, AGUA)
+    with open(ensure("verde-agua", "isotipo.svg"), "w") as f:
+        f.write(svg_doc(w, h, body, defs_a))
+    with open(ensure("verde-agua", "logotipo-dentalciudad.svg"), "w") as f:
+        f.write(svg_doc(word.shape[1], word.shape[0], body_word_a))
+    with open(ensure("verde-agua", "logo-horizontal.svg"), "w") as f:
+        f.write(horizontal_svg(body, defs_a, w, h, body_word_a, word.shape[1], word.shape[0]))
+    # comparación lado a lado
+    comp = canvas(1400, 420)
+    a_img = fit(H, 640, 180); b_img = to_pil(shift_rgba(np.array(fit(H, 640, 180))))
+    comp.alpha_composite(a_img, (40, 60)); comp.alpha_composite(b_img, (720, 60))
+    dr = ImageDraw.Draw(comp)
+    dr.text((40, 270), "Original (verde lima " + VERDE_LOGO + ")", fill="#333", font=font)
+    dr.text((720, 270), "Verde agua (" + AGUA + ")", fill="#333", font=font)
+    dr.rectangle([40, 320, 340, 380], fill=VERDE_TEXTO); dr.text((50, 335), "botón web con el original", fill="#fff", font=font)
+    dr.rectangle([720, 320, 1020, 380], fill="#0E7F70"); dr.text((730, 335), "botón web verde agua #0E7F70", fill="#fff", font=font)
+    comp.convert("RGB").save(ensure("verde-agua", "comparacion.png"), optimize=True)
 
     # ---- ZIP para descargar
     zpath = os.path.join(PROJ, "DentalCiudad-kit-de-marca.zip")

@@ -1,5 +1,8 @@
 # dentalciudad.ar
 
+Marca: `marca/` (kit generado con `src/make_brand.py`; la web usa la variante `verde-agua`, se cambia con `LOGO_VARIANTE` en `src/build.py`). Análisis de estándares y decisiones: `PLAN.md`.
+Lighthouse móvil del 25/10: rendimiento 99, accesibilidad 100, buenas prácticas 100, SEO 100.
+
 Web de Dental Ciudad: una sola web, una página por sede (`/microcentro/`, `/once/`) y una por tratamiento
 (`/implantes/`, `/protesis/`, `/carillas/`, `/ortodoncia/`, `/conducto/`, `/urgencias/`). Aparte de todo lo demás
 (no toca el servidor "edu", la agenda ni la caja).
@@ -20,6 +23,7 @@ Abre el WhatsApp de la sede con el mensaje armado y un código `DC-XXXXX`.
 
 ## Falta
 - `CONFIG` en `src/site.js`: Analytics y, por sede, el AW-… y la etiqueta de "Consulta web".
-- Horario de cada sede (`SEDES` en `src/build.py`) y fotos.
+- `RESPONSABLE` en `src/build.py` (nombre y matrícula para el pie) y fotos reales.
+- Confirmar horarios (hoy, los de la ficha de Google).
 - Que la caja reconozca el código `DC-…` del mensaje (lo hace Code en caja-whatsapp).
 - Dominio: dentalciudad.ar a este proyecto y dentalmicrocentro.ar redirigido a /microcentro/ (con OK de Eduardo).

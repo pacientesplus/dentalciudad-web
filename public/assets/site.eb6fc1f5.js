@@ -87,6 +87,17 @@
   const D = JSON.parse(dataEl.textContent);
   const pick = (name) => { const n = form.querySelector('input[name="' + name + '"]:checked'); return n ? n.value : ""; };
 
+  /* Sede de aterrizaje: cada cuenta de Google Ads manda a la página de su sede. Se guarda en la pestaña para que la
+     conversión vaya a la cuenta que pagó el clic aunque la persona después elija la otra sede. */
+  const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } } };
+  if (D.landing && !ss.get("dc_landing")) ss.set("dc_landing", D.landing);
+  const landing = ss.get("dc_landing") || "";
+
+  /* Toques en "Llamar" (evento para Analytics, no es conversión) */
+  document.querySelectorAll("[data-llamar]").forEach((a) => {
+    a.addEventListener("click", () => { if (typeof window.gtag === "function" && CONFIG.analyticsId) window.gtag("event", "llamar", { sede: a.dataset.llamar }); });
+  });
+
   function makeRef() {
     const abc = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
     const buf = new Uint32Array(5);
@@ -126,14 +137,15 @@
     const text = lines.join("\n");
     const url = "https://wa.me/" + sede.wa + "?text=" + encodeURIComponent(text);
 
-    /* Conversión: solo si paga particular. Valor = tratamiento × cuándo. Sin nombre, teléfono ni datos de salud. */
-    const ads = CONFIG.ads[v.sede];
+    /* Conversión: solo si paga particular. Valor = tratamiento × cuándo. Sin nombre, teléfono ni datos de salud.
+       Va a la cuenta de la sede de aterrizaje (la que pagó el clic); si entró por el inicio, a la de la sede elegida. */
+    const ads = CONFIG.ads[landing] || CONFIG.ads[v.sede];
     if (v.pago === "particular" && typeof window.gtag === "function") {
       const value = Math.round(D.motivos[v.motivo].valor * D.cuando[v.cuando].factor * 10) / 10;
       if (ads && ads.id && ads.label) {
         window.gtag("event", "conversion", { send_to: ads.id + "/" + ads.label, value, currency: CONFIG.currency, transaction_id: ref });
       }
-      if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede });
+      if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede, aterrizaje: landing || "inicio", motivo: v.motivo, cuando: v.cuando });
     }
 
     $("done-code").textContent = ref;
