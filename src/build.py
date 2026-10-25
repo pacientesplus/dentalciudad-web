@@ -49,7 +49,7 @@ SEDES = {
         "nombre": "Microcentro",
         "calle": "Av. Córdoba 679, piso 3, oficina C",
         "cp": "C1054AAF",
-        "ref": "a pasos de Galerías Pacífico",
+        "ref": "cerca de Galerías Pacífico",
         "llegada": "Edificio con ascensor. Anunciate con el portero: vas a Odontología, piso 3, oficina C.",
         "acceso": "Con ascensor",
         "wa": "5491124577716",
@@ -70,7 +70,7 @@ SEDES = {
         "nombre": "Once",
         "calle": "Av. Rivadavia 3033, planta baja 6",
         "cp": "C1203AAC",
-        "ref": "frente a Plaza Miserere",
+        "ref": "al lado de Plaza Miserere",
         "llegada": "Está en planta baja, sin escaleras. Tocá el timbre de la planta baja 6 y te abrimos.",
         "acceso": "Planta baja",
         "wa": "5491161460061",
@@ -102,8 +102,8 @@ FOTOS = {
     "once-box": ("once-box-trabajo", (320, 60, 2576, 1752), SEDES["once"]["foto_alt"]),
     "once-rx": ("once-rx-poster", (0, 120, 960, 840), "Radiovisiógrafo de la sede Once"),
     "micro-tec": ("micro-tecnologia", (0, 150, 960, 870), "Radiovisiógrafo y escáner 3D de la sede Microcentro"),
-    "rx-imax": ("once-rx-imax", (0, 500, 1932, 1949), "Equipo de rayos digital con la radiografía en la computadora"),
-    "rx-portatil": ("micro-rx-portatil", (0, 400, 1932, 1849), "Rayos X portátil y la radiografía en pantalla"),
+    "rx-imax": ("once-rx-imax", (0, 500, 1932, 1949), "Radiovisiógrafo con una periapical en la computadora"),
+    "rx-portatil": ("micro-rx-portatil", (0, 400, 1932, 1849), "Equipo portátil para periapicales y la imagen en pantalla"),
     "box-vidrio": ("once-box-vidrio", (0, 290, 960, 1010), "Odontóloga explicándole el tratamiento a una paciente en el consultorio"),
     "box-arriba": ("once-box-trabajo-arriba", (0, 500, 1932, 1949), "Odontóloga atendiendo a una paciente"),
 }
@@ -177,8 +177,8 @@ TRATAMIENTOS = [
      "body": [
          "Cuando la caries llega al nervio, el diente duele con el frío, con el calor o solo. El conducto limpia el interior del diente y lo sella, "
          "como cuando se cambia un caño tapado sin tirar la pared.",
-         "Se hace con anestesia y con radiografías en el momento, para ver el trabajo mientras se hace.",
-         "Con una radiografía te dicen si el diente se puede salvar y el doctor te da el valor."]},
+         "Se hace con anestesia y con periapicales en el momento (radiovisiógrafo), para ver el trabajo mientras se hace.",
+         "Con una periapical te dicen si el diente se puede salvar y el doctor te da el valor."]},
     {"slug": "arreglos", "motivo": "arreglo", "title": "Arreglos de caries y dientes rotos", "h1": "Arreglos y caries",
      "lead": "Caries, un diente partido, una obturación que se cayó.",
      "card": "Caries, dientes partidos, obturaciones que se cayeron.",
@@ -188,7 +188,7 @@ TRATAMIENTOS = [
          "La caries es un agujero que va creciendo si no se tapa. El arreglo saca la parte dañada y la rellena con un material del color del diente, "
          "como se repara un bache antes de que se haga más grande.",
          "También se arreglan dientes astillados o partidos y se cambian obturaciones viejas que se mancharon o se rompieron.",
-         "Se revisa con radiografía qué tan profunda está la caries y el doctor te da el valor."]},
+         "Con una periapical se ve qué tan profunda está la caries y el doctor te da el valor."]},
     {"slug": "limpieza", "motivo": "limpieza", "title": "Limpieza dental y control", "h1": "Limpieza y control",
      "lead": "Sarro, manchas y encías que sangran: una limpieza cada seis meses evita problemas grandes.",
      "card": "Sarro y manchas afuera; control de encías y caries.",
@@ -197,7 +197,7 @@ TRATAMIENTOS = [
      "body": [
          "La limpieza saca el sarro y las manchas que el cepillo ya no saca, sobre todo detrás de los dientes de abajo y cerca de la encía. "
          "Si la encía sangra cuando te cepillás, no es para dejar de cepillarte: es la señal de que hay que limpiar.",
-         "En el mismo turno se revisan las caries y las encías, y si hace falta se toma una radiografía.",
+         "En el mismo turno se revisan las caries y las encías, y si hace falta se toma una periapical.",
          "Escribinos y coordinamos el turno; el doctor te dice cada cuánto te conviene volver."]},
     {"slug": "urgencias", "motivo": "urgencia", "title": "Urgencias dentales: dolor de muela, también los sábados", "h1": "Dolor de muela o urgencia",
      "lead": "Si te duele, escribinos y te buscamos un turno lo antes posible. También los sábados.",
@@ -583,7 +583,7 @@ def como(f):
 <h2 id="h-como">Cómo trabajamos</h2>
 <dl class="puntos">
 <div><dt>Un odontólogo para cada tratamiento</dt><dd>Endodoncia, ortodoncia, cirugía maxilofacial, odontopediatría, prótesis y estética, cada una con el suyo. En la primera consulta te revisa quien te va a tratar.</dd></div>
-<div><dt>Imágenes en el momento</dt><dd>Radiografías digitales en el sillón y escáner 3D para tomar medidas sin pasta de impresión. Ves en la pantalla lo mismo que ve el doctor.</dd></div>
+<div><dt>Imágenes en el momento</dt><dd>Periapicales con radiovisiógrafo en el sillón y escáner 3D para tomar medidas sin pasta de impresión. Ves en la pantalla lo mismo que ve el doctor.</dd></div>
 <div><dt>Sabés qué se va a hacer antes de empezar</dt><dd>Te explican el plan paso a paso y te dan el presupuesto por escrito. Atención particular: efectivo, transferencia o tarjeta.</dd></div>
 <div><dt>{ANIOS} años en el centro de la ciudad</dt><dd>Dos sedes, en Microcentro y en Once, con turnos de lunes a sábado y urgencias los sábados.</dd></div>
 </dl>
@@ -630,9 +630,9 @@ def tecnologia(f):
     return f"""<section class="section" id="tecnologia" aria-labelledby="h-tec"><div class="wrap">
 <div class="section-head"><h2 id="h-tec">Tecnología en el consultorio</h2><p class="sub">Lo que hace falta para diagnosticar bien está en la misma sala, no en otro lado.</p></div>
 <ul class="tec">
-<li>{picture(f, "rx-imax", "(min-width: 760px) 50vw, 100vw")}<h3>Radiografías digitales en el sillón</h3><p>El radiovisiógrafo toma la placa y la muestra en la pantalla al instante, con menos radiación que la radiografía de antes. Se usa en conductos, implantes y para ver qué tan profunda está una caries.</p></li>
+<li>{picture(f, "rx-imax", "(min-width: 760px) 50vw, 100vw")}<h3>Periapicales con radiovisiógrafo</h3><p>La periapical es la imagen de uno o dos dientes con su raíz. El radiovisiógrafo la toma con un sensor digital y la muestra en la pantalla al instante, sin revelar placas. Se usa en conductos, implantes y para ver qué tan profunda está una caries.</p></li>
 <li>{picture(f, "micro-tec", "(min-width: 760px) 50vw, 100vw")}<h3>Escáner 3D en vez de la pasta de impresión</h3><p>Una cámara chica recorre los dientes y arma el modelo en la computadora. Sirve para prótesis, carillas y alineadores, sin la cubeta con pasta que daba arcadas.</p></li>
-<li>{picture(f, "rx-portatil", "(min-width: 760px) 50vw, 100vw")}<h3>Rayos X portátil</h3><p>El equipo va hasta el sillón: la placa se toma sin que te levantes ni cambies de sala, y aparece en la pantalla del consultorio.</p></li>
+<li>{picture(f, "rx-portatil", "(min-width: 760px) 50vw, 100vw")}<h3>Periapicales en el mismo sillón</h3><p>El equipo es portátil y va hasta el sillón: la periapical se toma sin que te levantes ni cambies de sala, y aparece en la pantalla del consultorio.</p></li>
 </ul>
 </div></section>"""
 
