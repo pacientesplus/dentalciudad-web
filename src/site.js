@@ -210,16 +210,17 @@
     const text = lines.join("\n");
     const url = "https://wa.me/" + sede.wa + "?text=" + encodeURIComponent(text);
 
-    /* Conversión: solo si paga particular. Valor = el del tratamiento. Sin nombre, teléfono ni datos de salud.
-       Va a la cuenta de la sede de aterrizaje (la que pagó el clic); si entró por el inicio, a la de la sede elegida. */
-    const ads = CONFIG.ads[landing] || CONFIG.ads[v.sede];
+    /* Conversión: solo si paga particular. Sin nombre, teléfono ni datos de salud.
+       Se avisa a las dos cuentas: cada una cuenta solo los clics que pagó ella, así sirve cualquier página de entrada
+       (sede, tratamiento o inicio) y no hay doble conteo (Eduardo, 31/10/2026). */
     if (v.pago === "particular" && typeof window.gtag === "function") {
       const value = D.motivos[v.motivo].valor;
-      if (ads && ads.id && ads.label) {
+      Object.values(CONFIG.ads).forEach((ads) => {
+        if (!ads.id || !ads.label) return;
         const conv = { send_to: ads.id + "/" + ads.label, transaction_id: ref };
         if (CONFIG.modo === "montos") Object.assign(conv, { value, currency: CONFIG.currency });
         window.gtag("event", "conversion", conv);
-      }
+      });
       if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede, aterrizaje: landing || "inicio", motivo: v.motivo });
     }
 

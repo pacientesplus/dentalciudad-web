@@ -230,6 +230,156 @@ FAQ = [
     ("¿Quién responde el WhatsApp?", "Una persona de la recepción de la sede que elijas, en el horario de atención."),
 ]
 
+# Contenido de las páginas de tratamiento (Eduardo, 31/10/2026: «si tiene que haber esa sección, hacela completa»).
+# Reglas (PLAN.md §1): sin «especialista», sin «sin dolor», sin promesas de duración ni de plazos, sin testimonios
+# copiados (las opiniones se leen en Google), sin precios.
+EXTRA = {
+    "implantes": {
+        "para": ["Te falta un diente y se nota al sonreír o al masticar.",
+                 "Los dientes de al lado se están corriendo hacia el hueco.",
+                 "Tu prótesis se mueve y te da vergüenza comer delante de otros.",
+                 "Te dijeron que había que sacar un diente y querés saber qué poner después."],
+        "opciones": [("Un implante, un diente", "Para un hueco: el diente nuevo queda solo, sin tocar los de al lado."),
+                     ("Varios implantes con un puente", "Para dos o más dientes seguidos: menos implantes sostienen todo el tramo."),
+                     ("Implantes que sostienen la prótesis", "La dentadura completa se engancha a dos o cuatro implantes y deja de moverse.")],
+        "pasos": [("Consulta e imágenes", "El odontólogo mira el hueso con periapicales y, si hace falta, pide una tomografía. Te dice si sos candidato."),
+                  ("Plan por escrito", "Cuántos implantes, en qué orden, cuánto tiempo y el presupuesto."),
+                  ("Colocación", "Con anestesia local, en el consultorio. El hueso necesita unos meses para abrazar el implante."),
+                  ("El diente", "Se toma la medida con escáner 3D y el laboratorio hace la corona a tu color.")],
+        "faq": [("¿Duele ponerse un implante?", "Se hace con anestesia local. Los días siguientes puede haber molestia o inflamación; el doctor te indica qué tomar."),
+                ("¿Cualquiera puede ponerse un implante?", "Depende del hueso y de tu salud general. Por eso primero se hacen las imágenes."),
+                ("¿Cuánto tiempo lleva todo?", "Depende de cada caso; el doctor te da los tiempos en el plan, antes de empezar.")],
+    },
+    "protesis": {
+        "para": ["Te faltan varios dientes y te cuesta masticar.",
+                 "Usás una prótesis vieja que se mueve o te lastima.",
+                 "Te molestan los ganchos de metal a la vista.",
+                 "Querés recuperar la sonrisa sin cirugía."],
+        "opciones": [("Flexible", "Liviana, se adapta a la encía y no tiene ganchos de metal a la vista."),
+                     ("Removible de ganchos", "La clásica «arañita»: se apoya en los dientes que tenés y es firme."),
+                     ("Completa", "Reemplaza toda la arcada cuando ya no quedan dientes."),
+                     ("Fija sobre implantes", "No se saca: queda enganchada a implantes (ver implantes).")],
+        "pasos": [("Consulta", "Se revisan los dientes que quedan y las encías, y te muestran qué tipo te conviene."),
+                  ("Medidas con escáner 3D", "Sin la pasta de impresión de siempre."),
+                  ("Prueba", "Antes de terminarla, te la probás para ver cómo calza y cómo queda."),
+                  ("Entrega y ajustes", "Te la llevás y volvés a un control para ajustar lo que roce.")],
+        "faq": [("¿Cuál es mejor, la flexible o la de ganchos?", "Depende de cuántos dientes te quedan y de cómo están. El doctor te muestra las dos opciones en tu caso."),
+                ("¿Se nota que es una prótesis?", "Se hace a tu color de dientes y de encía; la flexible no muestra metal."),
+                ("¿Puedo comer normal?", "Al principio hay que acostumbrarse unos días; después se come con normalidad, con algún cuidado con lo muy duro.")],
+    },
+    "carillas": {
+        "para": ["No te gusta el color de tus dientes y el blanqueamiento no alcanza.",
+                 "Tenés dientes desparejos, cortos, gastados o con espacios.",
+                 "Te tapás la boca con la mano en las fotos.",
+                 "Tenés manchas que no salen con la limpieza."],
+        "opciones": [("Cerámica", "Como una taza de loza: no se mancha con el café ni con el mate, y tiene el brillo de un diente natural."),
+                     ("Zirconio", "Muy resistente; se usa cuando el diente necesita más firmeza o tapar un color oscuro."),
+                     ("Resina", "Se hace en el sillón, en el día. Es la opción más accesible y se puede retocar.")],
+        "pasos": [("Consulta y fotos", "Se revisan los dientes, la mordida y las encías; se sacan fotos y se escanea la boca."),
+                  ("Diseño digital", "Ves en la pantalla cómo te va a quedar la sonrisa antes de tocar un diente."),
+                  ("Prueba", "Te probás la forma y el color, y se ajusta lo que quieras."),
+                  ("Colocación", "Se pegan las carillas y se controla la mordida.")],
+        "faq": [("¿Hay que limar los dientes?", "En la mayoría de los casos se prepara muy poco el diente, y a veces nada. Depende del tipo de carilla y de tus dientes."),
+                ("¿Se ven naturales?", "El color y la forma se eligen con vos, mirando el diseño antes de empezar."),
+                ("¿Cuál me conviene, cerámica o resina?", "Depende de cómo están tus dientes y de qué buscás. Te muestran las dos en tu caso, con su presupuesto.")],
+    },
+    "ortodoncia": {
+        "para": ["Tenés dientes torcidos, montados o separados.",
+                 "La mordida no cierra bien o se te gastan los dientes.",
+                 "Usaste ortodoncia de chico y los dientes se volvieron a mover.",
+                 "Querés ordenar los dientes antes de ponerte carillas."],
+        "opciones": [("Brackets", "Pegados a los dientes; metálicos o del color del diente."),
+                     ("Alineadores invisibles", "Placas transparentes que te sacás para comer y para cepillarte."),
+                     ("Contención", "Al terminar, una placa o un alambre fino para que los dientes no se vuelvan a mover.")],
+        "pasos": [("Consulta", "Se revisa la mordida, se sacan fotos y se escanea la boca."),
+                  ("Plan", "Qué aparato te conviene, cuánto tiempo y el presupuesto."),
+                  ("Tratamiento", "Controles periódicos para ir ajustando."),
+                  ("Contención", "Para que el resultado se quede.")],
+        "faq": [("¿Hay edad para la ortodoncia?", "No: se hace en chicos, adolescentes y adultos."),
+                ("¿Los alineadores sirven para todos?", "Para muchos casos sí; el doctor te dice si en el tuyo conviene alineador o brackets."),
+                ("¿Cuánto dura el tratamiento?", "Depende de cada boca; el doctor te da el tiempo estimado en el plan.")],
+    },
+    "conducto": {
+        "para": ["Te duele un diente con el frío o el calor, y el dolor se queda.",
+                 "Te duele solo, sobre todo de noche.",
+                 "Tenés la encía hinchada al lado de un diente.",
+                 "Un diente se puso más oscuro que los otros."],
+        "opciones": [("Conducto", "Se limpia el interior del diente y se sella; el diente se queda."),
+                     ("Reconstrucción", "Después del conducto, el diente se arregla o se cubre con una corona para que no se parta.")],
+        "pasos": [("Periapical", "Una imagen del diente con su raíz, en el momento, para ver hasta dónde llegó el problema."),
+                  ("Anestesia", "Se anestesia la zona antes de empezar."),
+                  ("Limpieza y sellado", "Se limpia el interior del diente y se sella, controlando con periapicales mientras se hace."),
+                  ("Reconstrucción", "Se arregla el diente para que vuelva a masticar.")],
+        "faq": [("¿El conducto duele?", "Se hace con anestesia. Lo que suele doler es el diente antes del tratamiento."),
+                ("¿No es mejor sacarlo?", "Siempre que se pueda, conviene salvar el diente: lo que lo reemplace va a costar más y no es lo mismo."),
+                ("¿En cuántas sesiones se hace?", "Muchas veces en una; depende del diente y de cómo está.")],
+    },
+    "arreglos": {
+        "para": ["Se te metió comida en un agujero o sentís un borde filoso.",
+                 "Te molesta un diente con lo dulce o con lo frío.",
+                 "Se te partió o astilló un diente.",
+                 "Tenés un arreglo viejo oscuro o que se cayó."],
+        "opciones": [("Arreglo del color del diente", "Resina que se elige del mismo tono: no se nota."),
+                     ("Reconstrucción", "Cuando falta un pedazo grande del diente."),
+                     ("Corona", "Si el diente está muy debilitado, se cubre entero para que no se parta.")],
+        "pasos": [("Revisión", "Se mira el diente y, si hace falta, una periapical para ver qué tan profunda es la caries."),
+                  ("Anestesia", "Si hace falta, antes de empezar."),
+                  ("Arreglo", "Se saca lo dañado y se rellena del color del diente."),
+                  ("Control de la mordida", "Para que no quede alto y mastiques bien.")],
+        "faq": [("¿Se hace en el día?", "La mayoría de los arreglos, sí, en un turno."),
+                ("¿Se nota el arreglo?", "Se hace con resina del color de tu diente."),
+                ("¿Qué pasa si no me arreglo la caries?", "Sigue creciendo y puede llegar al nervio; ahí ya hace falta un conducto.")],
+    },
+    "limpieza": {
+        "para": ["Te sangran las encías al cepillarte.",
+                 "Tenés sarro o manchas de café, mate o cigarrillo.",
+                 "Hace más de seis meses de tu último control.",
+                 "Tenés mal aliento que no se va con el cepillo."],
+        "opciones": [("Limpieza", "Se saca el sarro y las manchas, y se pulen los dientes."),
+                     ("Control", "Se revisan caries y encías en el mismo turno."),
+                     ("Blanqueamiento", "Después de la limpieza, si querés los dientes más blancos; el doctor te dice si te conviene.")],
+        "pasos": [("Revisión", "Se mira cómo están los dientes y las encías."),
+                  ("Limpieza", "Con ultrasonido y pulido."),
+                  ("Consejos", "Cómo cepillarte y qué usar en tu caso."),
+                  ("Próximo control", "Te dicen cada cuánto te conviene volver.")],
+        "faq": [("¿La limpieza daña el esmalte?", "No: saca el sarro, que es lo que daña las encías."),
+                ("¿Duele?", "Se siente la vibración; si tenés las encías sensibles, se hace con más cuidado."),
+                ("¿Cada cuánto conviene?", "En general cada seis meses; el doctor te dice en tu caso.")],
+    },
+    "urgencias": {
+        "para": ["Te late una muela y no se calma.",
+                 "Tenés la cara o la encía hinchada.",
+                 "Se te partió un diente o se te salió una corona.",
+                 "Te golpeaste la boca."],
+        "opciones": [("Calmar el dolor", "Lo primero: que se te pase."),
+                     ("Ver qué lo causa", "Con una periapical en el momento."),
+                     ("El tratamiento", "Conducto, arreglo o lo que haga falta, con turno.")],
+        "pasos": [("Escribinos", "Contanos qué te pasa y, si podés, mandá una foto."),
+                  ("Turno lo antes posible", "Te buscamos el primer lugar libre, también los sábados."),
+                  ("Atención", "Se calma el dolor y se ve qué lo causa."),
+                  ("Plan", "Te explican qué hay que hacer después y el presupuesto.")],
+        "faq": [("¿Atienden el mismo día?", "Te buscamos el primer lugar libre; escribinos y te decimos."),
+                ("¿Qué hago mientras tanto?", "No te pongas calor en la cara; si tenés fiebre o la hinchazón crece rápido, andá a una guardia."),
+                ("¿Atienden sábados?", f"Sí: Microcentro de {SEDES['microcentro']['sabado_urgencias']} y Once de {SEDES['once']['sabado_urgencias']}.")],
+    },
+    "ninos": {
+        "para": ["Es la primera visita de tu hijo al dentista.",
+                 "Le viste una mancha o un agujerito en un diente.",
+                 "Le duele una muela o no quiere masticar de un lado.",
+                 "Querés saber si va a necesitar ortodoncia."],
+        "opciones": [("Primera visita", "Para conocer el consultorio, sentarse en el sillón y revisar, sin apuro."),
+                     ("Selladores", "Una capa finita en las muelas para que no se les haga caries."),
+                     ("Arreglos", "Si ya hay caries, con paciencia y explicando cada paso.")],
+        "pasos": [("Conocer", "Primero que vea el consultorio y se siente tranquilo."),
+                  ("Revisar", "Se mira cómo vienen los dientes y la mordida."),
+                  ("Explicar", "A él y a vos: qué se hace y cómo cuidar los dientes en casa."),
+                  ("Controles", "Cada cuánto conviene volver.")],
+        "faq": [("¿Desde qué edad?", "Desde los primeros dientes."),
+                ("¿Y si mi hijo tiene miedo?", "La primera visita es para que conozca y se acostumbre; no se hace nada que no haga falta."),
+                ("¿Los dientes de leche se arreglan?", "Sí: si se pierden antes de tiempo, los de abajo pueden salir mal.")],
+    },
+}
+
 # ---------------------------------------------------------------- íconos (SVG en línea, sin pedidos de red)
 ICO_WA = ('<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>')
 ICO_TEL = ('<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>')
@@ -498,6 +648,20 @@ def rating_line(sede=None):
             f'y <strong>{o["rating"][0]}</strong> en <a href="{esc(o["reviews"])}" target="_blank" rel="noopener">Once</a>, con {RESENAS_TOTAL} reseñas de pacientes.</span></p>')
 
 
+def sedes_juntas(actual=None):
+    """Las dos sedes juntas, arriba de todo, en todas las páginas (Eduardo, 31/10/2026): el que entra por la página de
+    una sede ve en el primer vistazo que la otra existe y dónde queda. La sede de la página va primero y encendida."""
+    orden = sorted(SEDES, key=lambda k: k != actual) if actual else list(SEDES)
+    items = ""
+    for k in orden:
+        x = SEDES[k]
+        lit = " lit" if k == actual else ""
+        aria = ' aria-current="page"' if k == actual else ""
+        items += (f'<a class="sj{lit}" href="/{k}/"{aria}>{ICO_PIN}<span><strong>{esc(x["nombre"])}</strong>'
+                  f'<small>{esc(x["calle"].split(",")[0])} · {esc(x["ref"])}</small></span></a>')
+    return f'<nav class="sedes-juntas" aria-label="Nuestras dos sedes"><p>Dos sedes en el centro:</p>{items}</nav>'
+
+
 def hero(f, h1, lead, foto, eager=True, cta_sede=None, chips_html=""):
     """Portada: texto a la izquierda, foto grande a la derecha."""
     if cta_sede:
@@ -513,6 +677,7 @@ def hero(f, h1, lead, foto, eager=True, cta_sede=None, chips_html=""):
 <h1>{esc(h1)}</h1>
 <p class="lead">{esc(lead)}</p>
 {chips_html}
+{sedes_juntas(cta_sede)}
 <div class="ctas">{ctas}</div>
 {rating_line(cta_sede)}
 </div>
@@ -746,21 +911,38 @@ def build():
 {picture(f, "micro-sala" if slug == "microcentro" else "once-rx", "(min-width: 900px) 40vw, 100vw", "split-photo")}
 </div></section>"""
         write(f"{slug}/index.html", shell(
-            f"/{slug}/", f"Dentista en {s['nombre']}, CABA | {BRAND}",
+            f"/{slug}/", f"Dentista en {s['nombre']} y {SEDES[otra]['nombre']}, CABA | {BRAND}",
             f"Dental Ciudad sede {s['nombre']}: {s['calle']}, {s['ref']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos. Atención particular.",
-            hero(f, f"Dentista en {s['nombre']}", f"{cap(s['ref'])}. {s['acceso']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos, con turnos de lunes a sábado.",
+            hero(f, f"Dentista en {s['nombre']} y {SEDES[otra]['nombre']}", f"Sede {s['nombre']}: {s['ref']}, {s['acceso'].lower()}. Y a pocas cuadras de subte, la sede {SEDES[otra]['nombre']}. Implantes, prótesis, carillas, ortodoncia, conductos y chicos, con turnos de lunes a sábado.",
                  s["foto"], cta_sede=slug)
             + body + tecnologia(f) + tratamientos_grid() + como(f) + equipo() + social() + form(sede=slug) + faq_block(), sede=slug))
         urls.append(f"/{slug}/")
 
     for t in TRATAMIENTOS:
+        x = EXTRA[t["slug"]]
         paras = "".join(f"<p>{esc(p)}</p>" for p in t["body"][:-1])
-        body = f"""<section class="section"><div class="wrap"><div class="prose"><h2>En qué consiste</h2>{paras}
+        para = "".join(f"<li>{esc(p)}</li>" for p in x["para"])
+        ops = "".join(f"<li><h3>{esc(n)}</h3><p>{esc(d)}</p></li>" for n, d in x["opciones"])
+        pasos = "".join(f"<li><h3>{esc(n)}</h3><p>{esc(d)}</p></li>" for n, d in x["pasos"])
+        tfaq = "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in x["faq"])
+        body = f"""<section class="section" aria-labelledby="h-para"><div class="wrap split">
+<div class="split-text"><h2 id="h-para">¿Es para vos?</h2><ul class="para">{para}</ul></div>
+<div class="split-text"><h2>En qué consiste</h2>{paras}</div>
+</div></section>
+<section class="section section-wash" aria-labelledby="h-ops"><div class="wrap">
+<div class="section-head"><h2 id="h-ops">Las opciones</h2><p class="sub">Cuál te conviene te lo dice el doctor después de revisarte.</p></div>
+<ul class="ops">{ops}</ul></div></section>
+<section class="section" aria-labelledby="h-pasos"><div class="wrap">
+<div class="section-head"><h2 id="h-pasos">Cómo es, paso a paso</h2></div>
+<ol class="pasos">{pasos}</ol>
 <div class="consulta"><h3>{esc(t.get("panel", "En la primera consulta"))}</h3><p>{esc(t["body"][-1])}</p>
-<a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a></div></div></div></section>"""
+<a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a></div>
+</div></section>"""
+        tfaq_block = f'<section class="section" aria-labelledby="h-tfaq"><div class="wrap"><h2 id="h-tfaq">Preguntas sobre {esc(t["h1"].lower())}</h2><div class="faq">{tfaq}</div></div></section>'
         write(f"{t['slug']}/index.html", shell(
             f"/{t['slug']}/", f"{t['title']} | {BRAND}", t["desc"],
-            hero(f, t["h1"], t["lead"], t["foto"]) + body + como(f) + sedes_block(f) + form(motivo=t["motivo"]) + faq_block()))
+            hero(f, t["h1"], t["lead"], t["foto"]) + body + tecnologia(f) + social() + como(f) + sedes_block(f)
+            + form(motivo=t["motivo"]) + tfaq_block + faq_block()))
         urls.append(f"/{t['slug']}/")
 
     priv = f"""<section class="section"><div class="wrap"><div class="prose"><h1>Privacidad</h1>
