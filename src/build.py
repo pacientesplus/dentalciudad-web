@@ -502,7 +502,8 @@ def hero(f, h1, lead, foto, eager=True, cta_sede=None, chips_html=""):
     """Portada: texto a la izquierda, foto grande a la derecha."""
     if cta_sede:
         s = SEDES[cta_sede]
-        ctas = (f'<a class="btn glass lit" href="https://wa.me/{s["wa"]}" target="_blank" rel="noopener">{ICO_WA}<span>Escribir por WhatsApp</span></a>'
+        # Todo pedido de turno pasa por el formulario (filtra y lleva el código): nada de wa.me directo (Eduardo, 31/10).
+        ctas = (f'<a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a>'
                 f'<a class="btn glass" href="tel:{s["tel"]}" data-llamar="{cta_sede}">{ICO_TEL}<span>Llamar {esc(s["tel_label"])}</span></a>')
     else:
         ctas = f'<a class="btn glass lit" href="#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a><a class="btn glass" href="#sedes"><span>Ver las sedes</span></a>'
@@ -651,7 +652,7 @@ def sede_card(f, slug, s):
 {horario_html(s)}
 <p class="rating rating-small">{ICO_STAR}<span><strong>{s['rating'][0]}</strong> en Google, <a href="{esc(s['reviews'])}" target="_blank" rel="noopener">{s['rating'][1]} reseñas</a></span></p>
 <div class="sede-ctas">
-<a class="btn glass lit" href="https://wa.me/{s['wa']}" target="_blank" rel="noopener">{ICO_WA}<span>WhatsApp {esc(s['tel_label'])}</span></a>
+<a class="btn glass lit" href="/{slug}/#turno">{ICO_WA}<span>Pedir turno por WhatsApp</span></a>
 <a class="btn glass" href="tel:{s['tel']}" data-llamar="{slug}">{ICO_TEL}<span>Llamar</span></a>
 </div>
 <p class="sede-links"><a class="textlink" href="{esc(s['maps'])}" target="_blank" rel="noopener">Cómo llegar</a><a class="textlink ig" href="{IG(s['instagram'])}" target="_blank" rel="noopener">{ICO_IG}@{s['instagram']}</a></p>
@@ -677,7 +678,7 @@ def foot(assets, landing_sede=None):
     for slug, s in SEDES.items():
         hs = "<br>".join(f"{esc(d)}: {esc(h)}" for d, h in s["horario"] if h != "cerrado")
         cols += (f'<div class="foot-col"><h3><a href="/{slug}/">Sede {esc(s["nombre"])}</a></h3><p>{esc(s["calle"])}<br>{esc(cap(s["ref"]))}</p>'
-                 f'<p>{hs}</p><p><a href="https://wa.me/{s["wa"]}" target="_blank" rel="noopener">WhatsApp {esc(s["tel_label"])}</a></p></div>')
+                 f'<p>{hs}</p><p><a href="/{slug}/#turno">Pedir turno por WhatsApp</a></p></div>')
     trat = "".join(f'<a href="/{t["slug"]}/">{esc(t["h1"])}</a>' for t in TRATAMIENTOS)
     return f"""<footer class="foot">
 <div class="wrap foot-grid">
