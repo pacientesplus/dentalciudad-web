@@ -6,10 +6,13 @@
     analyticsId: "",   // FALTA: Google Analytics 4 de Dental Ciudad (G-...)
     // Una cuenta de Google Ads por sede: la conversión va a la cuenta de la sede que eligió la persona.
     ads: {
-      microcentro: { id: "", label: "" },  // FALTA: AW-... y etiqueta de "Consulta web" de la cuenta de Microcentro
-      once: { id: "", label: "" }          // FALTA: AW-... y etiqueta de "Consulta web" de la cuenta de Once
+      microcentro: { id: "AW-17043697075", label: "NscFCKi3qa8dELPbiL8_" },  // "Web a WhatsApp", cuenta 173-963-7756
+      once: { id: "AW-16487213569", label: "WddDCIaisq8dEIHU27U9" }           // "Web a WhatsApp", cuenta de Once
     },
-    currency: "USD"   // los valores son puntos relativos, no plata real
+    // Modo de la conversión (Eduardo, 31/10/2026): "contacto" = todas valen lo mismo (el valor fijo está en Google Ads);
+    // "montos" = manda el valor estimado por motivo. Se cambia acá y en la acción de Google Ads, juntos.
+    modo: "contacto",
+    currency: "USD"   // solo en modo "montos": los valores son puntos relativos, no plata real
   };
 
   const $ = (id) => document.getElementById(id);
@@ -213,7 +216,9 @@
     if (v.pago === "particular" && typeof window.gtag === "function") {
       const value = D.motivos[v.motivo].valor;
       if (ads && ads.id && ads.label) {
-        window.gtag("event", "conversion", { send_to: ads.id + "/" + ads.label, value, currency: CONFIG.currency, transaction_id: ref });
+        const conv = { send_to: ads.id + "/" + ads.label, transaction_id: ref };
+        if (CONFIG.modo === "montos") Object.assign(conv, { value, currency: CONFIG.currency });
+        window.gtag("event", "conversion", conv);
       }
       if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede, aterrizaje: landing || "inicio", motivo: v.motivo });
     }
