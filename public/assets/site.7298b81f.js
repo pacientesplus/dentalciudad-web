@@ -223,6 +223,9 @@
       });
       if (CONFIG.analyticsId) window.gtag("event", "generate_lead", { value, currency: CONFIG.currency, sede: v.sede, aterrizaje: landing || "inicio", motivo: v.motivo });
     }
+    /* OpenAI (ChatGPT Ads): misma regla que Google, solo particular. event_id = ref, el mismo código del mensaje,
+       para no duplicar cuando se mande también por la Conversions API desde el servidor (12/11/2026). */
+    if (v.pago === "particular" && window.oaiq) window.oaiq("measure", "lead_created", { type: "customer_action" }, { event_id: ref });
 
     $("done-code").textContent = ref;
     $("done-open").href = url;

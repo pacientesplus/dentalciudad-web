@@ -31,6 +31,13 @@ LOGO_VARIANTE = "verde-agua"   # "" = logo original verde lima; "verde-agua" = e
 HUE_AGUA = 183                 # tono del verde agua de la referencia (el lima del logo está en ~85°)
 SITE = "https://dentalciudad.ar"
 BRAND = "Dental Ciudad"
+# Píxel de conversiones de OpenAI (ChatGPT Ads), tal cual lo da OpenAI, con debug en false (12/11/2026).
+# Va inline al principio del <head>: la CSP de public/_headers lo permite por su hash sha256, así que si se cambia
+# una sola letra de este texto hay que recalcular el hash ('sha256-…' en script-src) o el navegador lo bloquea.
+OAIQ_PIXEL = ('<script>!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;'
+              'var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}'
+              '(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");'
+              'oaiq("init",{pixelId:"SFiXeAJ5g73nmearYhHAhG",debug:false});</script>')
 TODAY = date.today().isoformat()
 ANIOS = "8"
 # Instagram (Eduardo, 25/10): tres cuentas. La de cada sede va en su tarjeta y en su página; las tres, en «En Google y en Instagram» y en el pie.
@@ -594,6 +601,7 @@ def head(title, desc, path, assets, noindex=False, preload=None):
 <html lang="es-AR">
 <head>
 <meta charset="utf-8">
+{OAIQ_PIXEL}
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no, address=no">
 <title>{esc(title)}</title>
