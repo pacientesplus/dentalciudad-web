@@ -89,6 +89,17 @@
     document.addEventListener("click", (e) => { if (m.open && !m.contains(e.target)) m.open = false; });
   });
 
+  /* ¿Vino por un anuncio de Google? Se mira al cargar cualquier página (tenga formulario o no) y se guarda en la
+     pestaña, así vale aunque la persona navegue antes de enviar. Solo queda la marca: el gclid no se guarda ni se
+     manda a ningún lado. También cuenta la cookie del enlazador de conversiones (_gcl_aw / _gcl_gb), que dura 90 días
+     si la persona aceptó cookies. */
+  const ses = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } } };
+  try {
+    const q = new URLSearchParams(location.search);
+    if (["gclid", "gbraid", "wbraid"].some((k) => q.get(k))) ses.set("dc_origen", "google");
+  } catch (e) { /* URL sin parámetros legibles */ }
+  const vinoDeGoogle = () => ses.get("dc_origen") === "google" || /(?:^|;\s*)_gcl_(?:aw|gb)=/.test(document.cookie || "");
+
   /* Formulario */
   const dataEl = $("dc-data");
   const form = $("lead-form");
@@ -98,7 +109,7 @@
 
   /* Sede de aterrizaje: cada cuenta de Google Ads manda a la página de su sede. Se guarda en la pestaña para que la
      conversión vaya a la cuenta que pagó el clic aunque la persona después elija la otra sede. */
-  const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } } };
+  const ss = ses;
   if (D.landing && !ss.get("dc_landing")) ss.set("dc_landing", D.landing);
   const landing = ss.get("dc_landing") || "";
 
@@ -107,11 +118,12 @@
     a.addEventListener("click", () => { if (typeof window.gtag === "function" && CONFIG.analyticsId) window.gtag("event", "llamar", { sede: a.dataset.llamar }); });
   });
 
+  /* DC-G-XXXXX si vino por un anuncio de Google, DC-XXXXX si no. AGO lee el código del mensaje para poner el origen. */
   function makeRef() {
     const abc = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
     const buf = new Uint32Array(5);
     try { crypto.getRandomValues(buf); } catch (e) { for (let i = 0; i < 5; i++) buf[i] = Math.floor(Math.random() * 1e9); }
-    return "DC-" + Array.from(buf, (n) => abc[n % abc.length]).join("");
+    return (vinoDeGoogle() ? "DC-G-" : "DC-") + Array.from(buf, (n) => abc[n % abc.length]).join("");
   }
 
   const syncObra = () => { $("obra-note").hidden = pick("pago") !== "obra"; };
