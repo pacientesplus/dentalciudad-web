@@ -96,7 +96,8 @@ RESENAS_TOTAL = sum(int(s["rating"][1]) for s in SEDES.values())
 
 # Fotos: nombre público → (archivo original en fotos/, recorte (izq, arriba, der, abajo) o None, texto alternativo).
 FOTOS = {
-    "hero": ("micro-escaner-3d", (0, 560, 1932, 2009), "Odontóloga de Dental Ciudad mostrando un escaneo 3D en la computadora, con una paciente en el sillón"),
+    "hero": ("consultorio-escaner-logo", (0, 90, 1080, 900), "Consultorio de Dental Ciudad: la odontóloga revisa el escaneo 3D en la computadora mientras la paciente espera en el sillón"),
+    "hero-anterior": ("micro-escaner-3d", (0, 560, 1932, 2009), "Odontóloga de Dental Ciudad mostrando un escaneo 3D en la computadora, con una paciente en el sillón"),
     "micro-recepcion": ("micro-recepcion-arbol", (760, 560, 1932, 1440), SEDES["microcentro"]["foto_alt"]),
     "micro-sala": ("micro-sala-espera", (0, 700, 1932, 2149), "Sala de espera de la sede Microcentro"),
     "once-box": ("once-box-trabajo", (320, 60, 2576, 1752), SEDES["once"]["foto_alt"]),
@@ -153,7 +154,7 @@ TRATAMIENTOS = [
      "lead": "Para la sonrisa que hoy tapás con la mano en las fotos.",
      "card": "Cerámica, zirconio o resina; diseño digital antes de empezar.",
      "desc": "Carillas de cerámica, zirconio y resina en CABA, sedes Microcentro y Once. Diseño de sonrisa. Atención particular.",
-     "foto": "hero",
+     "foto": "hero-anterior",
      "body": [
          "Una carilla es una lámina finita que se pega en la cara de adelante del diente. Cambia color, forma y largo. "
          "La de cerámica es como una taza de loza: no se mancha con el café ni con el mate.",
