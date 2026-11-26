@@ -97,8 +97,12 @@
   try {
     const q = new URLSearchParams(location.search);
     if (["gclid", "gbraid", "wbraid"].some((k) => q.get(k))) ses.set("dc_origen", "google");
+    else if (q.get("desde") === "maps" && !ses.get("dc_origen")) ses.set("dc_origen", "maps");
   } catch (e) { /* URL sin parámetros legibles */ }
   const vinoDeGoogle = () => ses.get("dc_origen") === "google" || /(?:^|;\s*)_gcl_(?:aw|gb)=/.test(document.cookie || "");
+  /* ¿Vino del perfil de Google Maps? El botón «Sitio web» de cada perfil lleva «?desde=maps» (Maps no marca sus
+     links). Un clic pago de Google gana: si hubo gclid, es Google Ads. */
+  const vinoDeMaps = () => !vinoDeGoogle() && ses.get("dc_origen") === "maps";
 
   /* Formulario */
   const dataEl = $("dc-data");
@@ -118,12 +122,13 @@
     a.addEventListener("click", () => { if (typeof window.gtag === "function" && CONFIG.analyticsId) window.gtag("event", "llamar", { sede: a.dataset.llamar }); });
   });
 
-  /* DC-G-XXXXX si vino por un anuncio de Google, DC-XXXXX si no. AGO lee el código del mensaje para poner el origen. */
+  /* DC-G-XXXXX si vino por un anuncio de Google, DC-M-XXXXX si vino del perfil de Google Maps, DC-XXXXX si no. AGO
+     lee el código del mensaje para poner el origen. */
   function makeRef() {
     const abc = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
     const buf = new Uint32Array(5);
     try { crypto.getRandomValues(buf); } catch (e) { for (let i = 0; i < 5; i++) buf[i] = Math.floor(Math.random() * 1e9); }
-    return (vinoDeGoogle() ? "DC-G-" : "DC-") + Array.from(buf, (n) => abc[n % abc.length]).join("");
+    return (vinoDeGoogle() ? "DC-G-" : vinoDeMaps() ? "DC-M-" : "DC-") + Array.from(buf, (n) => abc[n % abc.length]).join("");
   }
 
   const syncObra = () => { $("obra-note").hidden = pick("pago") !== "obra"; };
