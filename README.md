@@ -27,7 +27,9 @@ Tres pasos (Eduardo, 25/10: «tres pasitos nada más»): qué querés resolver, 
 teléfono. Abre el WhatsApp de la sede con el mensaje armado («Quiero / Pago / Sede / Código DC-XXXXX»).
 
 - El código dice de dónde vino: `DC-G-XXXXX` = entró por un anuncio de Google (la URL trajo `gclid`, `gbraid` o
-  `wbraid` en esa pestaña, o está la cookie `_gcl_aw`/`_gcl_gb` de los últimos 90 días); `DC-XXXXX` = por otro lado.
+  `wbraid` en esa pestaña, o está la cookie `_gcl_aw`/`_gcl_gb` de los últimos 90 días); `DC-M-XXXXX` = entró desde el
+  perfil de Google Maps (el «Sitio web» de cada perfil lleva `?desde=maps`, 26/11/2026; si también hubo clic pago, gana
+  Google Ads); `DC-XXXXX` = por otro lado.
   Solo la marca: el gclid no se guarda ni se manda a ningún servidor. AGO lo lee del mensaje para poner el origen.
 - Conversión a Google Ads solo si paga particular. Obra social / prepaga: aviso "atendemos de manera particular" y no cuenta.
 - Valor (puntos relativos, no plata) = el del tratamiento: implantes 10, prótesis 8, carillas 8, ortodoncia 6, conducto 4,
